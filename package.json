@@ -5,7 +5,7 @@
 	"keywords": ["pictionary", "draw", "drawing", "game", "socket.io", "nodejs", "node.js"],
 	"author": "Dave Frassoni <me@davefrassoni.com> (http://davefrassoni.com/)",
 	"dependencies": {
-		"socket.io": "",
+		"socket.io": "0.9.5",
 		"sanitizer": ""
 	},
 	"engine": "node >= 0.4.7",
