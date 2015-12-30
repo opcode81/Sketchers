@@ -66,14 +66,15 @@ function handler (req, res) {
 
 var users = [], canvas = [];
 var dictionary, currentWord, currentPlayer, drawingTimer;
+var playerUID = 1;
 
 // load dictionary.txt into memory
-fs.readFile(__dirname + '/dictionary.txt', function (err, data) {
+fs.readFile(__dirname + '/dictionaries/de.txt', function (err, data) {
 	dictionary = data.toString('utf-8').split('\r\n');
 });
 
 io.sockets.on('connection', function (socket) {
-	var myNick = 'guest',
+	var myNick = 'Player' + playerUID++,
 		myColor = rndColor();
 		myScore = 0;
 	
@@ -109,7 +110,7 @@ io.sockets.on('connection', function (socket) {
 		
 		// check if current word was guessed
 		if(currentPlayer != null && currentPlayer != socket.id) {
-			if(sanitizedMsg.toLowerCase().trim() == currentWord) {
+			if(sanitizedMsg.toLowerCase().trim() == currentWord.toLowerCase()) {
 				io.sockets.emit('wordGuessed', { text: currentWord, color: myColor, nick: myNick });
 				
 				// add scores to guesser and drawer
