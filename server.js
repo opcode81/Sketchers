@@ -65,17 +65,21 @@ function handler (req, res) {
 // ================================================
 
 var users = [], canvas = [];
-var dictionary, currentWord, currentPlayer, drawingTimer;
+var dictionary, currentWord, currentPlayer; 
+var drawingTimer = null, hintIntervalId = null;
 var playerUID = 1;
 var roundStartTime;
 var playerIndicesGuessedCorrectly;
 var socketsById = {}, usersById = {};
+var currentHint, numCurrentHintsProvided;
 
 // game mode
 var roundTime = 120;
 var correctGuessEndsTurn = false;
 var scoreByRemainingTime = true; // if false, score constant
 var autoSelectNextPlayer = true; // if true, players must manually select the next player
+var maxHints = 4;
+var maxHintFraction = 0.40;
 
 // load dictionary.txt into memory
 fs.readFile(__dirname + '/dictionaries/de.txt', function (err, data) {
@@ -105,7 +109,26 @@ io.sockets.on('connection', function (socket) {
 			}
 		}
 	}
-
+	
+	function getRandomInt(min, max) {
+	    return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+	
+	function addHint() {
+		var indices = [];
+		for (var i = 0; i < currentHint.length; ++i)
+			if (currentHint[i] == '_')
+				indices.push(i);
+		var idx = indices[getRandomInt(0, indices.length-1)];
+		currentHint = currentHint.substr(0, idx) + currentWord[idx] + currentHint.substr(idx+1);
+		++numCurrentHintsProvided;
+	}
+	
+	function provideHint() {
+		addHint();
+		io.sockets.emit('hint', {hint: currentHint});
+	}
+	
 	function startTurn(playerId) {
 		currentPlayer = playerId;
 		canvas.splice(0, canvas.length);
@@ -116,14 +139,39 @@ io.sockets.on('connection', function (socket) {
 			word = line.split(',');
 		
 		currentWord = word[0];
+
+		// initialise hint
+		var hint = '';
+		var nonHint = '- ';
+		for (var i = 0; i < currentWord.length; ++i) {
+			if (nonHint.indexOf(currentWord[i]) === -1) {
+				hint += '_';
+			}
+			else {
+				hint += currentWord[i];
+			}
+		}
+		numCurrentHintsProvided = 0;
+		currentHint = hint;
+		
+		// add one hint from the start
+		addHint();
+		
+		// determine the maximum number of additional hints to provide
+		var maxHintsForWord = Math.floor(currentWord.length * maxHintFraction);
+		var hintsToProvideInTotal = Math.min(maxHints, maxHintsForWord);
+		var hintsYetToProvide = hintsToProvideInTotal - numCurrentHintsProvided;
+		var hintInterval = 1000 * (roundTime / (hintsYetToProvide+1));
+		
 		var user = usersById[playerId];
 		socketsById[playerId].emit('youDraw', word);
-		io.sockets.emit('startRound', { color: user.color, nick: user.nick, time:roundTime });
+		io.sockets.emit('startRound', { color: user.color, nick: user.nick, time:roundTime, hint:currentHint });
 		
 		playerIndicesGuessedCorrectly = [];
 		
-		// set the timer for the round
+		// set the timers for this round
 		drawingTimer = setTimeout(turnFinished, roundTime * 1000);
+		hintIntervalId = setInterval(provideHint, hintInterval);
 		roundStartTime = new Date().getTime();
 	}
 	
@@ -219,6 +267,7 @@ io.sockets.on('connection', function (socket) {
 		if(currentPlayer == socket.id) {
 			// turn off drawing timer
 			clearTimeout(drawingTimer);
+			clearInterval(hintIntervalId);
 			turnFinished();
 		}
 	});
@@ -279,12 +328,17 @@ io.sockets.on('connection', function (socket) {
 				break;
 		console.log('turn finished; player index: ' + drawingPlayerIndex + '; current player ID: ' + currentPlayer);
 		
-		if (drawingTimer != null)
+		if (drawingTimer != null) {
 			clearTimeout(drawingTimer);
+			drawingTimer = null;
+		}
+		if (hintIntervalId != null) {
+			clearTimeout(hintIntervalId);
+			hintIntervalId = null;
+		}
 		
 		io.sockets.emit('endRound');
 
-		drawingTimer = null;
 		currentPlayer = null;
 		if (playerIndicesGuessedCorrectly.length == 0)
 			io.sockets.emit('wordNotGuessed', { text: currentWord });
@@ -292,8 +346,12 @@ io.sockets.on('connection', function (socket) {
 		// allow new user to draw
 		if (autoSelectNextPlayer) {
 			var user = users[(drawingPlayerIndex+1) % users.length];
-			console.log('turn finished; new player ID: ' + user.id);
-			startTurn(user.id);
+			if (user == undefined)
+				console.log("no user");
+			else {
+				console.log('turn finished; new player ID: ' + user.id);
+				startTurn(user.id);
+			}
 		}
 		else {
 			currentPlayer = null;

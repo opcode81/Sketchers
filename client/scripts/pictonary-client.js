@@ -210,9 +210,14 @@ $(document).ready(function() {
 	
 	var readytodraw = $('#readytodraw'), 
 		$timer = $('#timer'),
+		$hint = $('#hint'),
 		myword = '',
 		timeleft,
 		drawingTimer = null;
+	
+	function setHint(hint) {
+		$hint.text(hint.split('').join(' '));
+	}
 	
 	readytodraw.click(function() {
 		socket.emit('readyToDraw');
@@ -228,6 +233,7 @@ $(document).ready(function() {
 	
 	socket.on('startRound', function(msg) {
 		timeleft = msg.time;
+		setHint(msg.hint);
 		
 		if(!myturn) {
 			status.text('Status: online | ' + msg.nick + ' is drawing right now!');
@@ -238,7 +244,7 @@ $(document).ready(function() {
 		console.log("startRound; myTurn=" + myturn);
 		
 		drawingTimer = setInterval( timerTick, 1000 );		
-		++timeLeft;
+		++timeleft;
 		timerTick();
 		
 		chatcontent.append('<p>&raquo; <span style="color:' + msg.color + '">' + msg.nick + '</span> is drawing!</p>');
@@ -262,6 +268,10 @@ $(document).ready(function() {
 		}
 		chatcontent.append('<p>Click <strong>Ready to draw!</strong> button to draw.</p>');
 		chatScrollDown();
+	});
+	
+	socket.on('hint', function(msg) {
+		setHint(msg.hint);
 	});
 	
 	socket.on('youGuessedIt', function(msg) {
