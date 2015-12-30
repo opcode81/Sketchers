@@ -4,8 +4,8 @@
 
 body
 {
-	background:#000;
-	font-family:tahoma;
+	background:#A96A6A;
+	font-family:Calibri,Tahoma;
 	font-size:12px;
 }
 
@@ -74,11 +74,13 @@ body
 {
 	margin-top:10px;
 	padding:5px;
+	float:right;
 }
 
 .color
 {
-	padding:2px;
+	padding:5px;
+	margin-top:10px;
 	border:solid 2px #ccc;
 }
 
@@ -139,10 +141,9 @@ body
 {
 	border-radius:2px;
 	border:1px solid #ccc;
-	margin-top:10px;
+	margin-top:24px;
 	padding:5px;
-	width:80px;
-	float:left;
+	width:150px;
 }
 
 #chatinput
@@ -150,16 +151,35 @@ body
 	border-radius:2px;
 	border:1px solid #ccc;
 	margin-top:10px;
-	margin-left:10px;
+	margin-left:0px;
 	padding:5px;
 	width:200px;
 	float:left;
 }
 
-#clearchat,
+#clearchat {
+	width:90px;
+	margin-left:10px;
+	height:27px;
+	margin-top:-4px;
+}
+
+#readytodraw {
+	width:100%;
+	margin-top:0px;
+	margin-bottom:10px;
+}
+
 #changenickcolor,
 #readytodraw
 {
 	margin-top:10px;
 	padding:5px;
+}
+
+#timer {
+	font-weight: bold;
+	font-size: 40pt;
+	color: white;
+	text-align: center;
 }

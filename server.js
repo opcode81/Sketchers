@@ -67,6 +67,15 @@ function handler (req, res) {
 var users = [], canvas = [];
 var dictionary, currentWord, currentPlayer, drawingTimer;
 var playerUID = 1;
+var roundStartTime;
+var playerIndicesGuessedCorrectly;
+var socketsById = {}, usersById = {};
+
+// game mode
+var roundTime = 120;
+var correctGuessEndsTurn = false;
+var scoreByRemainingTime = true; // if false, score constant
+var autoSelectNextPlayer = true; // if true, players must manually select the next player
 
 // load dictionary.txt into memory
 fs.readFile(__dirname + '/dictionaries/de.txt', function (err, data) {
@@ -78,7 +87,10 @@ io.sockets.on('connection', function (socket) {
 		myColor = rndColor();
 		myScore = 0;
 	
-	users.push({ id: socket.id, nick: myNick, color: myColor, score: myScore });
+	var user = { id: socket.id, nick: myNick, color: myColor, score: myScore };
+	users.push(user);
+	usersById[socket.id] = user;
+	socketsById[socket.id] = socket;
 	io.sockets.emit('userJoined', { nick: myNick, color: myColor });
 	io.sockets.emit('users', users);
 	socket.emit('drawCanvas', canvas);
@@ -87,15 +99,33 @@ io.sockets.on('connection', function (socket) {
 	if(currentPlayer) {
 		for(var i = 0; i<users.length; i++) {
 			if(users[i].id == currentPlayer) {
-				socket.emit('firendDraw', { color: users[i].color, nick: users[i].nick });
+				var timePassedSecs = Math.floor((new Date().getTime() - roundStartTime) / 1000);
+				socket.emit('startRound', { color: users[i].color, nick: users[i].nick, time: roundTime-timePassedSecs });
 				break;
 			}
 		}
 	}
-	
-	// =============
-	// chat logic section
-	// =============
+
+	function startTurn(playerId) {
+		currentPlayer = playerId;
+		canvas.splice(0, canvas.length);
+		io.sockets.emit('clearCanvas');
+		
+		var randomLine = Math.floor(Math.random() * dictionary.length),
+			line = dictionary[randomLine],
+			word = line.split(',');
+		
+		currentWord = word[0];
+		var user = usersById[playerId];
+		socketsById[playerId].emit('youDraw', word);
+		io.sockets.emit('startRound', { color: user.color, nick: user.nick, time:roundTime });
+		
+		playerIndicesGuessedCorrectly = [];
+		
+		// set the timer for the round
+		drawingTimer = setTimeout(turnFinished, roundTime * 1000);
+		roundStartTime = new Date().getTime();
+	}
 	
 	socket.on('message', function (msg) {
 		var sanitizedMsg = sanitizer.sanitize(msg.text);
@@ -106,31 +136,48 @@ io.sockets.on('connection', function (socket) {
 			return;
 		}
 		
-		io.sockets.emit('message', { text: sanitizedMsg, color: myColor, nick: myNick });
+		var isCorrectGuess = sanitizedMsg.toLowerCase().trim() == currentWord.toLowerCase();
 		
-		// check if current word was guessed
-		if(currentPlayer != null && currentPlayer != socket.id) {
-			if(sanitizedMsg.toLowerCase().trim() == currentWord.toLowerCase()) {
-				io.sockets.emit('wordGuessed', { text: currentWord, color: myColor, nick: myNick });
-				
-				// add scores to guesser and drawer
-				for(var i = 0; i<users.length; i++) {
-					if(users[i].id == socket.id || users[i].id == currentPlayer) {
-						users[i].score = users[i].score + 10;
-					}
+		if (!isCorrectGuess)
+			io.sockets.emit('message', { text: sanitizedMsg, color: myColor, nick: myNick });
+		
+		// check if current word was guessed (and not previously guessed by the same player)
+		var previouslyGuessed = playerIndicesGuessedCorrectly.indexOf(socket.id) >= 0;
+		if(currentPlayer != null && currentPlayer != socket.id && isCorrectGuess && !previouslyGuessed) {
+			playerIndicesGuessedCorrectly.push(socket.id);
+			
+			var timePassed = new Date().getTime() - roundStartTime;
+			var timePassedSecs = Math.floor(timePassed / 1000);
+			var timeRemainingSecs = roundTime - timePassedSecs;
+			var text = correctGuessEndsTurn ? currentWord : timeRemainingSecs + "s";
+			io.sockets.emit('wordGuessed', { text: text, color: myColor, nick: myNick });
+			socket.emit('youGuessedIt');
+			
+			// add scores to guesser and drawer
+			for(var i = 0; i<users.length; i++) {
+				if(users[i].id == socket.id) { // guessing player
+					if (scoreByRemainingTime) 
+						users[i].score += timeRemainingSecs;
+					else
+						users[i].score += 10;
 				}
-				
-				// comunicate new scores
-				sortUsersByScore();
-				io.sockets.emit('users', users);
-				
-				// turn off drawing timer
-				clearTimeout(drawingTimer);
-				drawingTimer = null;
-				
-				// allow new user to draw
-				currentPlayer = null;
-				io.sockets.emit('youCanDraw');
+				else if (users[i].id == currentPlayer) { // drawing player
+					drawingPlayerIndex = i;
+					if (scoreByRemainingTime)
+						users[i].score += Math.floor(timeRemainingSecs / (users.length-1));
+					else
+						users[i].score += 10;
+				}
+			}
+			
+			// comunicate new scores
+			sortUsersByScore();
+			io.sockets.emit('users', users);
+			
+			var allGuessed = playerIndicesGuessedCorrectly.length == users.length-1;
+			
+			if (correctGuessEndsTurn || allGuessed) {
+				turnFinished();
 			}
 		}
 	});
@@ -162,6 +209,7 @@ io.sockets.on('connection', function (socket) {
 		for(var i = 0; i<users.length; i++) {
 			if(users[i].id == socket.id) {
 				users.splice(i,1);
+				socketsById[socket.id] = undefined;
 				break;
 			}
 		}
@@ -208,7 +256,7 @@ io.sockets.on('connection', function (socket) {
 	};
 	
 	function sortUsersByScore() {
-		users.sort(function(a,b) { return parseFloat(b.score) - parseFloat(a.score) } );
+		users.sort(function(a,b) { return parseFloat(b.score) - parseFloat(a.score); } );
 	}
 	
 	// =================
@@ -216,32 +264,40 @@ io.sockets.on('connection', function (socket) {
 	// =================
 	
 	socket.on('readyToDraw', function () {
-		if (!currentPlayer) {
-			currentPlayer = socket.id;
-			canvas.splice(0, canvas.length);
-			io.sockets.emit('clearCanvas');
-			
-			var randomLine = Math.floor(Math.random() * dictionary.length),
-				line = dictionary[randomLine],
-				word = line.split(',');
-			
-			currentWord = word[0];
-			socket.emit('youDraw', word);
-			io.sockets.emit('firendDraw', { color: myColor, nick: myNick });
-			
-			// set the timer for 2 minutes (120000ms)
-			drawingTimer = setTimeout( turnFinished, 120000 );
-		} else if (currentPlayer == socket.id) {
+		if (!currentPlayer) { // new round triggered
+			startTurn(socket.id);
+		} else if (currentPlayer == socket.id) { // pass
 			// turn off drawing timer
-			clearTimeout(drawingTimer);
 			turnFinished();
 		}
 	});
 	
 	function turnFinished() {
+		var drawingPlayerIndex = 0;
+		for(; drawingPlayerIndex < users.length; drawingPlayerIndex++)
+			if (users[drawingPlayerIndex].id == currentPlayer) 
+				break;
+		console.log('turn finished; player index: ' + drawingPlayerIndex + '; current player ID: ' + currentPlayer);
+		
+		if (drawingTimer != null)
+			clearTimeout(drawingTimer);
+		
+		io.sockets.emit('endRound');
+
 		drawingTimer = null;
 		currentPlayer = null;
-		io.sockets.emit('wordNotGuessed', { text: currentWord });
-		io.sockets.emit('youCanDraw');
+		if (playerIndicesGuessedCorrectly.length == 0)
+			io.sockets.emit('wordNotGuessed', { text: currentWord });
+	
+		// allow new user to draw
+		if (autoSelectNextPlayer) {
+			var user = users[(drawingPlayerIndex+1) % users.length];
+			console.log('turn finished; new player ID: ' + user.id);
+			startTurn(user.id);
+		}
+		else {
+			currentPlayer = null;
+			io.sockets.emit('youCanDraw');
+		}
 	}
 });

@@ -208,9 +208,10 @@ $(document).ready(function() {
 	//                           pictionary logic section
 	// ================================================
 	
-	var readytodraw = $('#readytodraw'),
+	var readytodraw = $('#readytodraw'), 
+		$timer = $('#timer'),
 		myword = '',
-		timeleft = 120,
+		timeleft,
 		drawingTimer = null;
 	
 	readytodraw.click(function() {
@@ -219,62 +220,77 @@ $(document).ready(function() {
 	
 	socket.on('youDraw', function(word) {
 		myturn = true;
+		console.log("youDraw");
 		canvas.css('background-color', '#fff');
 		myword = word;
-		status.text('status: online | Your word is: ' + myword[0] + ' (difficulty: ' + myword[1] + ')');
-		readytodraw.prop('value', 'Pass (' + timeleft + ')');
-		
-		// turn on drawing timer
-		drawingTimer = setInterval( timerTick, 1000 );
+		status.html('Status: online | Your word is: <b>' + myword[0] + '</b> (difficulty: ' + myword[1] + ')');
 	});
 	
-	socket.on('firendDraw', function(msg) {
+	socket.on('startRound', function(msg) {
+		timeleft = msg.time;
+		
 		if(!myturn) {
-			status.text('status: online | ' + msg.nick + ' is drawing right now!');
+			status.text('Status: online | ' + msg.nick + ' is drawing right now!');
 		}
+		else {
+			readytodraw.prop('value', 'Pass (' + timeleft + ')');
+		}
+		console.log("startRound; myTurn=" + myturn);
+		
+		drawingTimer = setInterval( timerTick, 1000 );		
+		++timeLeft;
+		timerTick();
 		
 		chatcontent.append('<p>&raquo; <span style="color:' + msg.color + '">' + msg.nick + '</span> is drawing!</p>');
 		chatScrollDown();
 	});
 	
+	socket.on('endRound', function(msg) {
+		console.log("endRound");
+		if (drawingTimer != null) {
+			clearInterval(drawingTimer);
+			drawingTimer = null;
+		}
+		myturn = false;
+		canvas.css('background-color', '#ccc');
+	});
+	
 	socket.on('youCanDraw', function(msg) {
 		if(myturn) {
 			myturn = false;
-			canvas.css('background-color', '#ccc');
 			status.text('status: online | Click Ready to draw! button to start drawing');
 		}
 		chatcontent.append('<p>Click <strong>Ready to draw!</strong> button to draw.</p>');
 		chatScrollDown();
 	});
 	
+	socket.on('youGuessedIt', function(msg) {
+		canvas.css('background-color', 'yellow');
+	});
+	
 	socket.on('wordGuessed', function(msg) {
 		chatcontent.append('<p>&raquo; <span style="color:' + msg.color + '">' + msg.nick + '</span> guessed the word (<strong>' + msg.text + '</strong>) !!!</p>');
 		chatScrollDown();
-		if(myturn = true) {
-			timeleft = 120;
-			clearInterval(drawingTimer);
-			drawingTimer = null;
-			readytodraw.prop('value', 'Ready to draw!');
-		}
 	});
 	
 	socket.on('wordNotGuessed', function(msg) {
 		chatcontent.append('<p>&raquo; The turn is over! The word was <strong>' + msg.text + '</strong>.</p>');
 		chatScrollDown();
-		if(myturn = true) {
-			timeleft = 120;
-			clearInterval(drawingTimer);
-			drawingTimer = null;
-			readytodraw.prop('value', 'Ready to draw!');
-		}
 	});
 	
 	function timerTick() {
 		if(timeleft > 0) {
 			timeleft--;
-			readytodraw.prop('value', 'Pass (' + timeleft + ')');
+			if (myturn) {
+				readytodraw.prop('value', 'Pass');
+				readytodraw.attr("disabled", false);
+			}
+			else {
+				readytodraw.prop('value', 'Guess!');
+				readytodraw.attr("disabled", true);
+			}
+			$timer.text(timeleft);
 		} else {
-			timeleft = 120;
 			clearInterval(drawingTimer);
 			drawingTimer = null;
 			readytodraw.prop('value', 'Ready to draw!');
