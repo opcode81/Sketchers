@@ -1,35 +1,27 @@
-# Pictionary #
-current version: 0.1.2
+# Sketchers #
 
-## Description ##
+An online multiplayer browser game where players guess words/terms based sketches drawn on a virtual whiteboard (similar to Pictionary, Activity and Montagsmaler) with over 1800 words in English and German. 
 
-### Enjoyable Pictionary game working with Node.js and Socket.io ###
-
-## Installation ##
-
-### Either download from GitHub or run: ###
-
-		npm install Pictionary
-
-## Setup ##
+## Usage ##
 
 1. Run:
 
 		node server.js
 
-1. Browse to:
+2. Browse to:
 
-		http://localhost:8080/
+		http://localhost:42420/
 
-1. Enjoy the Pictionary!
 
-1. Modify code as you want
+## Rules of the Game ##
 
-## Sample ##
+Once all players are connected (3 is the minimum), the player who wants to begin his first round presses the button "Ready to draw!". The clock then starts ticking (countdown timer on the left).
 
-Find an online sample at http://pictionary.davefrassoni.com/.
+The player is given a word/term and tries to depict it on the whiteboard while the other players try to guess the term. 
+The other players enter their guesses into the chat window (not case-sensitive).
 
-Thanks to my JS mentor, Angel J Lopez (https://github.com/ajlopez) for his canvas sample and all the support!
+Incorrect guesses can be seen by everyone in the chat. Whenever a user guessed the term correctly, he/she is awarded points: as many points are awarded as there
+are seconds left on the clock. Furthermore, the player who is currently drawing is also awarded an N-th of the guessing player's points if 
+there are N guessing players in total. 
 
-[![NPM](https://nodei.co/npm/Pictionary.png?downloads=true&stars=true)](https://nodei.co/npm/Pictionary/)
-[![NPM](https://nodei.co/npm-dl/Pictionary.png)](https://nodei.co/npm/Pictionary/)
+If either all players guessed the term correctly or time has run out, the round ends and the next player continues.   
