@@ -2,7 +2,7 @@ var app = require('http').createServer(handler),
 	io = require('socket.io').listen(app, { log: false }),
 	fs = require('fs'),
 	sanitizer = require('sanitizer'),
-	port = process.env.port || 8080;
+	port = process.env.port || 42420;
 
 app.listen(port);
 console.log('>>> Pictionary started at port ' + port + ' >>>');
@@ -74,7 +74,7 @@ var socketsById = {}, usersById = {};
 var currentHint, numCurrentHintsProvided;
 
 // game mode
-var roundTime = 120;
+var roundTime = 120, roundNo = 0;
 var correctGuessEndsTurn = false;
 var scoreByRemainingTime = true; // if false, score constant
 var autoSelectNextPlayer = true; // if true, players must manually select the next player
@@ -119,9 +119,11 @@ io.sockets.on('connection', function (socket) {
 		for (var i = 0; i < currentHint.length; ++i)
 			if (currentHint[i] == '_')
 				indices.push(i);
-		var idx = indices[getRandomInt(0, indices.length-1)];
-		currentHint = currentHint.substr(0, idx) + currentWord[idx] + currentHint.substr(idx+1);
-		++numCurrentHintsProvided;
+		if (indices.length > 0) {
+			var idx = indices[getRandomInt(0, indices.length-1)];
+			currentHint = currentHint.substr(0, idx) + currentWord[idx] + currentHint.substr(idx+1);
+			++numCurrentHintsProvided;
+		}
 	}
 	
 	function provideHint() {
@@ -130,6 +132,7 @@ io.sockets.on('connection', function (socket) {
 	}
 	
 	function startTurn(playerId) {
+		roundNo++;
 		currentPlayer = playerId;
 		canvas.splice(0, canvas.length);
 		io.sockets.emit('clearCanvas');
@@ -139,6 +142,7 @@ io.sockets.on('connection', function (socket) {
 			word = line.split(',');
 		
 		currentWord = word[0];
+		console.log("Round #" + roundNo);
 
 		// initialise hint
 		var hint = '';
