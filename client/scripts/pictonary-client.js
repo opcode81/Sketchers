@@ -15,10 +15,20 @@ $(document).ready(function() {
 	
 	socket.on('users', function (users) {
 		people.text('');
+		$table = $('<table class="users"></table>');
+		people.append($table);
 		for(var i in users)
 		{
-			people.append('<p>' + users[i].score + ' | <span style="color:' + users[i].color + '">' + users[i].nick + '</span></p>');
+			var row = '<tr><td class="score">' + users[i].score + '</td><td>';
+			if (users[i].guessedCorrectly)
+				row += '<img src="star.png">&nbsp;';
+			row += '<span style="color:' + users[i].color + '">' + users[i].nick + '</span>';
+			if (users[i].isCurrent)
+				row += ' <img src="pencil.png" height=9>';
+			row += '</td></tr>';
+			$table.append(row);
 		}
+		people.append($table);
 	});
 	
 	// ================================================
@@ -85,7 +95,7 @@ $(document).ready(function() {
 	});
 	
 	socket.on('nickChange', function (user) {
-		chatcontent.append('<p><span style="color:' + user.color + '">' + user.oldNick + '</span> changed his nick to <span style="color:' + user.color + '">' + user.newNick + '</span></p>');
+		chatcontent.append('<p><span style="color:' + user.color + '">' + user.oldNick + '</span> changed his nick to <span style="color:' + user.color + '">' + user.newNick + '</span>.</p>');
 		chatScrollDown();
 	});
 
@@ -252,7 +262,7 @@ $(document).ready(function() {
 	});
 	
 	socket.on('endRound', function(msg) {
-		chatcontent.append('<p>&raquo; This round is over! The word was <strong>' + msg.word + '</strong>.</p>');
+		chatcontent.append('<p>&raquo; This round is over. The word was <strong>' + msg.word + '</strong>.</p>');
 		chatScrollDown();
 		console.log("endRound");
 		if (drawingTimer != null) {
@@ -284,7 +294,7 @@ $(document).ready(function() {
 	});
 	
 	socket.on('wordGuessed', function(msg) {
-		chatcontent.append('<p>&raquo; <span style="color:' + msg.color + '">' + msg.nick + '</span> guessed the word (<strong>' + msg.text + '</strong>) !!!</p>');
+		chatcontent.append('<p>&raquo; <span style="color:' + msg.color + '">' + msg.nick + '</span> guessed the word (<strong>' + msg.text + '</strong>.</p>');
 		chatScrollDown();
 	});
 		

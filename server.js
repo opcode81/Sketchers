@@ -91,7 +91,7 @@ io.sockets.on('connection', function (socket) {
 		myColor = rndColor();
 		myScore = 0;
 	
-	var user = { id: socket.id, nick: myNick, color: myColor, score: myScore };
+	var user = { id: socket.id, nick: myNick, color: myColor, score: myScore, guessedCorrectly:false, isCurrent:false };
 	users.push(user);
 	usersById[socket.id] = user;
 	socketsById[socket.id] = socket;
@@ -133,7 +133,11 @@ io.sockets.on('connection', function (socket) {
 	
 	function startTurn(playerId) {
 		roundNo++;
+		console.log("Round #" + roundNo);
+		
 		currentPlayer = playerId;
+		var user = usersById[playerId];
+		
 		canvas.splice(0, canvas.length);
 		io.sockets.emit('clearCanvas');
 		
@@ -142,7 +146,6 @@ io.sockets.on('connection', function (socket) {
 			word = line.split(',');
 		
 		currentWord = word[0];
-		console.log("Round #" + roundNo);
 
 		// initialise hint
 		var hint = '';
@@ -166,10 +169,17 @@ io.sockets.on('connection', function (socket) {
 		var hintsToProvideInTotal = Math.min(maxHints, maxHintsForWord);
 		var hintsYetToProvide = hintsToProvideInTotal - numCurrentHintsProvided;
 		var hintInterval = 1000 * (roundTime / (hintsYetToProvide+1));
+
+		// reset user data
+		users.map(function(u) {
+			u.isCurrent = u.id == user.id;
+			u.guessedCorrectly = false;
+		});
 		
-		var user = usersById[playerId];
+		// send messages
 		socketsById[playerId].emit('youDraw', word);
 		io.sockets.emit('startRound', { color: user.color, nick: user.nick, time:roundTime, hint:currentHint });
+		io.sockets.emit('users', users);
 		
 		playerIndicesGuessedCorrectly = [];
 		
@@ -212,6 +222,7 @@ io.sockets.on('connection', function (socket) {
 						users[i].score += timeRemainingSecs;
 					else
 						users[i].score += 10;
+					users[i].guessedCorrectly = true;
 				}
 				else if (users[i].id == currentPlayer) { // drawing player
 					drawingPlayerIndex = i;
@@ -219,6 +230,7 @@ io.sockets.on('connection', function (socket) {
 						users[i].score += Math.floor(timeRemainingSecs / (users.length-1));
 					else
 						users[i].score += 10;
+					users[i].guessedCorrectly = true;
 				}
 			}
 			
