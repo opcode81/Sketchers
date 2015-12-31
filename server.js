@@ -159,7 +159,7 @@ io.sockets.on('connection', function (socket) {
 		currentHint = hint;
 		
 		// add one hint from the start
-		addHint();
+		//addHint();
 		
 		// determine the maximum number of additional hints to provide
 		var maxHintsForWord = Math.floor(currentWord.length * maxHintFraction);
