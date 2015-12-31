@@ -7,7 +7,7 @@ $(document).ready(function() {
 		chatnick = $('#chatnick');
 	
 	socket.on('connect', function () {
-		status.text('status: online | Click Ready to draw! button to start drawing');
+		status.text('Click Ready to draw! button to start drawing');
 		chatinput.removeProp('disabled');
 		chatnick.removeProp('disabled');
 		chatinput.focus();
@@ -212,7 +212,7 @@ $(document).ready(function() {
 		$timer = $('#timer'),
 		$hint = $('#hint'),
 		myword = '',
-		timeleft,
+		timeleft = null,
 		drawingTimer = null;
 	
 	function setHint(hint) {
@@ -228,7 +228,7 @@ $(document).ready(function() {
 		console.log("youDraw");
 		canvas.css('background-color', '#fff');
 		myword = word;
-		status.html('Status: online | Your word is: <b>' + myword[0] + '</b> (difficulty: ' + myword[1] + ')');
+		status.html('Your word is: <b>' + myword[0] + '</b> (difficulty: ' + myword[1] + ')');
 	});
 	
 	socket.on('startRound', function(msg) {
@@ -236,7 +236,7 @@ $(document).ready(function() {
 		setHint(msg.hint);
 		
 		if(!myturn) {
-			status.text('Status: online | ' + msg.nick + ' is drawing right now!');
+			status.text(msg.nick + ' is drawing right now!');
 		}
 		else {
 			readytodraw.prop('value', 'Pass (' + timeleft + ')');
@@ -264,7 +264,7 @@ $(document).ready(function() {
 	socket.on('youCanDraw', function(msg) {
 		if(myturn) {
 			myturn = false;
-			status.text('status: online | Click Ready to draw! button to start drawing');
+			status.text('Click \'Ready to draw!\' to start drawing');
 		}
 		chatcontent.append('<p>Click <strong>Ready to draw!</strong> button to draw.</p>');
 		chatScrollDown();
@@ -289,7 +289,7 @@ $(document).ready(function() {
 	});
 	
 	function timerTick() {
-		if(timeleft > 0) {
+		if(timeleft && timeleft > 0) {
 			timeleft--;
 			if (myturn) {
 				readytodraw.prop('value', 'Pass');
