@@ -216,7 +216,7 @@ $(document).ready(function() {
 		drawingTimer = null;
 	
 	function setHint(hint) {
-		$hint.text(hint.split('').join(' '));
+		$hint.html(hint.split('').join('&nbsp;'));
 	}
 	
 	readytodraw.click(function() {
