@@ -104,7 +104,7 @@ io.sockets.on('connection', function (socket) {
 		for(var i = 0; i<users.length; i++) {
 			if(users[i].id == currentPlayer) {
 				var timePassedSecs = Math.floor((new Date().getTime() - roundStartTime) / 1000);
-				socket.emit('startRound', { color: users[i].color, nick: users[i].nick, time: roundTime-timePassedSecs });
+				socket.emit('startRound', { color: users[i].color, nick: users[i].nick, time: roundTime-timePassedSecs, hint:currentHint });
 				break;
 			}
 		}
