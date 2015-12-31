@@ -252,6 +252,8 @@ $(document).ready(function() {
 	});
 	
 	socket.on('endRound', function(msg) {
+		chatcontent.append('<p>&raquo; This round is over! The word was <strong>' + msg.word + '</strong>.</p>');
+		chatScrollDown();
 		console.log("endRound");
 		if (drawingTimer != null) {
 			clearInterval(drawingTimer);
@@ -282,12 +284,7 @@ $(document).ready(function() {
 		chatcontent.append('<p>&raquo; <span style="color:' + msg.color + '">' + msg.nick + '</span> guessed the word (<strong>' + msg.text + '</strong>) !!!</p>');
 		chatScrollDown();
 	});
-	
-	socket.on('wordNotGuessed', function(msg) {
-		chatcontent.append('<p>&raquo; The turn is over! The word was <strong>' + msg.text + '</strong>.</p>');
-		chatScrollDown();
-	});
-	
+		
 	function timerTick() {
 		if(timeleft && timeleft > 0) {
 			timeleft--;

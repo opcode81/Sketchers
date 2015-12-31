@@ -5,7 +5,7 @@ var app = require('http').createServer(handler),
 	port = process.env.port || 42420;
 
 app.listen(port);
-console.log('>>> Pictionary started at port ' + port + ' >>>');
+console.log('>>> Sketchers started on port ' + port + ' >>>');
 
 // ================================================
 //                           server routing section
@@ -341,13 +341,11 @@ io.sockets.on('connection', function (socket) {
 			hintIntervalId = null;
 		}
 		
-		io.sockets.emit('endRound');
+		io.sockets.emit('endRound', { word: currentWord });
 
 		currentPlayer = null;
-		if (playerIndicesGuessedCorrectly.length == 0)
-			io.sockets.emit('wordNotGuessed', { text: currentWord });
 	
-		// allow new user to draw
+		// allow next user to draw
 		if (autoSelectNextPlayer) {
 			var user = users[(drawingPlayerIndex+1) % users.length];
 			if (user == undefined)
