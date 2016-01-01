@@ -198,57 +198,59 @@ io.sockets.on('connection', function (socket) {
 			return;
 		}
 		
-		var isCorrectGuess = sanitizedMsg.toLowerCase().trim() == currentWord.toLowerCase();
+		var isCorrectGuess = currentWord && sanitizedMsg.toLowerCase().trim() == currentWord.toLowerCase();
 		
 		if (!isCorrectGuess)
 			io.sockets.emit('message', { text: sanitizedMsg, color: myColor, nick: myNick });
 		
 		// check if current word was guessed (and not previously guessed by the same player)
-		var previouslyGuessed = playerIndicesGuessedCorrectly.indexOf(socket.id) >= 0;
-		if(currentPlayer != null && currentPlayer != socket.id && isCorrectGuess && !previouslyGuessed) {
-			playerIndicesGuessedCorrectly.push(socket.id);
-			
-			var timePassed = new Date().getTime() - roundStartTime;
-			var timePassedSecs = Math.floor(timePassed / 1000);
-			var timeRemainingSecs = roundTime - timePassedSecs;
-			
-			// add scores to guesser and drawer
-			var pointsAwarded = [];
-			for(var i = 0; i<users.length; i++) {
-				if(users[i].id == socket.id) { // guessing player
-					var points; 
-					if (scoreByRemainingTime) 
-						points = timeRemainingSecs;
-					else
-						points = 10;
-					users[i].score += points;
-					users[i].guessedCorrectly = true;
-					pointsAwarded.push([users[i], points]);
+		if (currentPlayer != null) {
+			var previouslyGuessed = playerIndicesGuessedCorrectly.indexOf(socket.id) >= 0;
+			if(currentPlayer != socket.id && isCorrectGuess && !previouslyGuessed) {
+				playerIndicesGuessedCorrectly.push(socket.id);
+				
+				var timePassed = new Date().getTime() - roundStartTime;
+				var timePassedSecs = Math.floor(timePassed / 1000);
+				var timeRemainingSecs = roundTime - timePassedSecs;
+				
+				// add scores to guesser and drawer
+				var pointsAwarded = [];
+				for(var i = 0; i<users.length; i++) {
+					if(users[i].id == socket.id) { // guessing player
+						var points; 
+						if (scoreByRemainingTime) 
+							points = timeRemainingSecs;
+						else
+							points = 10;
+						users[i].score += points;
+						users[i].guessedCorrectly = true;
+						pointsAwarded.push([users[i], points]);
+					}
+					else if (users[i].id == currentPlayer) { // drawing player
+						drawingPlayerIndex = i;
+						var points;
+						if (scoreByRemainingTime)
+							points = Math.floor(timeRemainingSecs / (users.length-1));
+						else
+							points = 10;
+						users[i].score += points;
+						users[i].guessedCorrectly = true;
+						pointsAwarded.push([users[i], points]);
+					}
 				}
-				else if (users[i].id == currentPlayer) { // drawing player
-					drawingPlayerIndex = i;
-					var points;
-					if (scoreByRemainingTime)
-						points = Math.floor(timeRemainingSecs / (users.length-1));
-					else
-						points = 10;
-					users[i].score += points;
-					users[i].guessedCorrectly = true;
-					pointsAwarded.push([users[i], points]);
+				
+				io.sockets.emit('wordGuessed', { timePassedSecs: timePassedSecs, color: myColor, nick: myNick, points: pointsAwarded });
+				socket.emit('youGuessedIt');
+				
+				// communicate new scores
+				sortUsersByScore();
+				io.sockets.emit('users', users);
+				
+				var allGuessed = playerIndicesGuessedCorrectly.length == users.length-1;
+				
+				if (correctGuessEndsTurn || allGuessed) {
+					turnFinished(false, allGuessed);
 				}
-			}
-
-			io.sockets.emit('wordGuessed', { timePassedSecs: timePassedSecs, color: myColor, nick: myNick, points: pointsAwarded });
-			socket.emit('youGuessedIt');
-
-			// communicate new scores
-			sortUsersByScore();
-			io.sockets.emit('users', users);
-			
-			var allGuessed = playerIndicesGuessedCorrectly.length == users.length-1;
-			
-			if (correctGuessEndsTurn || allGuessed) {
-				turnFinished(false, allGuessed);
 			}
 		}
 	});
