@@ -303,8 +303,19 @@ $(document).ready(function() {
 		canvas.css('background-color', 'yellow');
 	});
 	
+	var formatUser = function(data) {
+		return '<span style="color:' + data.color + '">' + data.nick + '</span>';
+	};
+	
 	socket.on('wordGuessed', function(msg) {
-		chatcontent.append('<p>&raquo; <span style="color:' + msg.color + '">' + msg.nick + '</span> guessed the word (<strong>' + msg.text + '</strong>).</p>');
+		var message = '<p>&raquo; ' + formatUser(msg) + ' guessed the word after ' + msg.timePassedSecs + ' s:<br>';
+		$.each(msg.points, function(i, pair) {
+			if (i > 0)
+				message += '<br>';
+			message += formatUser(pair[0]) + ' <b>+' + pair[1] + '</b>';
+		});
+		message += '</p>';
+		chatcontent.append(message);
 		chatScrollDown();
 	});
 		

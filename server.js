@@ -211,30 +211,37 @@ io.sockets.on('connection', function (socket) {
 			var timePassed = new Date().getTime() - roundStartTime;
 			var timePassedSecs = Math.floor(timePassed / 1000);
 			var timeRemainingSecs = roundTime - timePassedSecs;
-			var text = correctGuessEndsTurn ? currentWord : timeRemainingSecs + "s";
-			io.sockets.emit('wordGuessed', { text: text, color: myColor, nick: myNick });
-			socket.emit('youGuessedIt');
 			
 			// add scores to guesser and drawer
+			var pointsAwarded = [];
 			for(var i = 0; i<users.length; i++) {
 				if(users[i].id == socket.id) { // guessing player
+					var points; 
 					if (scoreByRemainingTime) 
-						users[i].score += timeRemainingSecs;
+						points = timeRemainingSecs;
 					else
-						users[i].score += 10;
+						points = 10;
+					users[i].score += points;
 					users[i].guessedCorrectly = true;
+					pointsAwarded.push([users[i], points]);
 				}
 				else if (users[i].id == currentPlayer) { // drawing player
 					drawingPlayerIndex = i;
+					var points;
 					if (scoreByRemainingTime)
-						users[i].score += Math.floor(timeRemainingSecs / (users.length-1));
+						points = Math.floor(timeRemainingSecs / (users.length-1));
 					else
-						users[i].score += 10;
+						points = 10;
+					users[i].score += points;
 					users[i].guessedCorrectly = true;
+					pointsAwarded.push([users[i], points]);
 				}
 			}
-			
-			// comunicate new scores
+
+			io.sockets.emit('wordGuessed', { timePassedSecs: timePassedSecs, color: myColor, nick: myNick, points: pointsAwarded });
+			socket.emit('youGuessedIt');
+
+			// communicate new scores
 			sortUsersByScore();
 			io.sockets.emit('users', users);
 			
