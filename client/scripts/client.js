@@ -142,6 +142,7 @@ $(document).ready(function() {
 		clearcanvas = $('#clearcanvas'),
 		clearchat = $('#clearchat'),
 		selectedcolor = $('#colour'),
+		$lineWidth = $('#lineWidth'),
 		context = canvas[0].getContext('2d'),
 		lastpoint = null,
 		painting = false,
@@ -151,7 +152,7 @@ $(document).ready(function() {
 	
 	function draw(line) {
 		context.lineJoin = 'round';
-		context.lineWidth = 2;
+		context.lineWidth = line.width;
 		context.strokeStyle = line.color;
 		context.beginPath();
 		
@@ -175,7 +176,7 @@ $(document).ready(function() {
 		if(myturn) {
 			painting = true;
 			var newpoint = { x: e.pageX - this.offsetLeft, y: e.pageY - this.offsetTop},
-				line = { from: null, to: newpoint, color: selectedcolor.val() };
+				line = { from: null, to: newpoint, color: selectedcolor.val(), width: $lineWidth.val()};
 			
 			draw(line);
 			lastpoint = newpoint;
@@ -206,11 +207,11 @@ $(document).ready(function() {
 		if(canvasToDraw) {
 			canvas.width(canvas.width());
 			context.lineJoin = 'round';
-			context.lineWidth = 2;
 			
 			for(var i=0; i < canvasToDraw.length; i++)
 			{		
 				var line = canvasToDraw[i];
+				context.lineWidth = line.width;
 				context.strokeStyle = line.color;
 				context.beginPath();
 				if(line.from){
@@ -309,6 +310,7 @@ $(document).ready(function() {
 		myturn = false;
 		canvas.css('background-color', '#ccc');
 		selectedcolor.spectrum('set', '#000');
+		$lineWidth.val(2);
 	});
 	
 	socket.on('youCanDraw', function(msg) {

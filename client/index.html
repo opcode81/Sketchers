@@ -8,7 +8,6 @@
 		<script type="text/javascript" src="scripts/socket.io.js"></script>
 		<script type="text/javascript" src="scripts/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript" src="scripts/client.js"></script>
-		<script type="text/javascript" src="scripts/jscolor/jscolor.js"></script>
 		<script type="text/javascript" src="scripts/spectrum.js"></script>
 	</head>
 	<body>
@@ -31,8 +30,19 @@
 						<canvas id="canvas" width="500" height="500"></canvas>
 					</div>
 					<div style="margin-top:10px">
-						<input type="button" id="clearcanvas" value="Clear canvas" />
-						<input id="colour" type='text'>
+						<table style="width:100%">
+						<tr>
+							<td style="width:60px;">
+								<input id="colour" type='text'>
+							</td>
+							<td>
+								<input id="lineWidth" type="range" min="2" max="20" step="1" value="2">
+							</td>
+							<td style="text-align:right">
+								<input type="button" id="clearcanvas" value="Clear canvas" />
+							</td>
+						</tr>
+						</table>
 					</div>	
 				</div>
 				<div id="thirdpanel">
