@@ -81,9 +81,32 @@ var autoSelectNextPlayer = true; // if true, players must manually select the ne
 var maxHints = 4;
 var maxHintFraction = 0.40;
 
+function shuffle(array) {
+	  var currentIndex = array.length, temporaryValue, randomIndex;
+
+	  // While there remain elements to shuffle...
+	  while (0 !== currentIndex) {
+
+	    // Pick a remaining element...
+	    randomIndex = Math.floor(Math.random() * currentIndex);
+	    currentIndex -= 1;
+
+	    // And swap it with the current element.
+	    temporaryValue = array[currentIndex];
+	    array[currentIndex] = array[randomIndex];
+	    array[randomIndex] = temporaryValue;
+	  }
+}
+
 // load dictionary.txt into memory
 fs.readFile(__dirname + '/dictionaries/de.txt', function (err, data) {
 	dictionary = data.toString('utf-8').split('\r\n');
+	dictionary = dictionary.map(function(x) {
+		return x.split(",");
+	});
+	dictionary = dictionary.filter(function(x) { return x.length == 3; });
+	console.log(dictionary.length + " words in dictionary");
+	shuffle(dictionary);
 });
 
 io.sockets.on('connection', function (socket) {
@@ -124,9 +147,7 @@ io.sockets.on('connection', function (socket) {
 		canvas.splice(0, canvas.length);
 		io.sockets.emit('clearCanvas');
 		
-		var randomLine = Math.floor(Math.random() * dictionary.length),
-			line = dictionary[randomLine],
-			word = line.split(',');
+		var word = dictionary[(roundNo-1) % dictionary.length];
 		
 		currentWord = word[0];
 
