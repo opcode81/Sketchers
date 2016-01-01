@@ -76,16 +76,8 @@ input, button {
 
 #clearcanvas
 {
-	margin-top:10px;
 	padding:5px;
 	float:right;
-}
-
-.color
-{
-	padding:5px;
-	margin-top:10px;
-	border:solid 2px #ccc;
 }
 
 /* -------------------------- */
