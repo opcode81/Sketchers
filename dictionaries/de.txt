@@ -9,11 +9,11 @@ Afro,1,1
 Airbag,2,1
 Flugzeug,2,1
 Flughafen,3,1
-aladdin,3,1
+Aladin,3,1
 Alarm,2,1
 Alf,2,1
 Ausländer,2,1
-ausrichten,3,0
+Ausrichtung,3,0
 allein,3,1
 Alphabet,3,0
 amazon,3,1
@@ -21,7 +21,6 @@ Amerika,3,1
 Dübel,1,1
 Android,3,1
 Engel,2,1
-angelina,3,0
 Zorn,2,0
 Tiere,2,0
 Knöchel,2,0
@@ -56,8 +55,6 @@ autobots,3,1
 Benutzerbild,2,1
 Rächer,3,1
 Avocado,2,1
-avril,3,0
-wach,2,0
 Auszeichnung,1,1
 Axt,1,1
 Baby,1,1
@@ -72,11 +69,10 @@ Beutel,1,1
 Dudelsack,3,1
 Bahamas,3,0
 Köder,2,0
-backen,2,0
 Backen,2,0
 Bilanzsumme,3,0
 Balkon,3,1
-kahl,2,1
+Glatze,2,1
 Ball,1,1
 Ballon,2,1
 Bambus,2,1
@@ -92,12 +88,11 @@ Rinde,1,0
 Scheune,1,1
 Fass,2,1
 Bart,2,1
-SOCKEL,1,0
+Sockel,1,0
 Baseball,2,1
 Korb,2,1
 Schläger,1,1
 Badewanne,2,0
-Offiziersbursche,1,1
 Batterie,2,1
 Bucht,2,1
 Strand,2,0
@@ -127,7 +122,6 @@ Vogel,1,1
 Vogelkäfig,1,1
 Geburtstag,3,1
 schwarz,2,1
-befestigen dieses Gesicht zu Blade,2,0
 Decke,2,1
 Mixer,1,1
 Blimp,1,1
@@ -139,12 +133,10 @@ Schlag,2,0
 blau,1,0
 erröten,2,0
 Boot,1,1
-BobDylan,3,0
+Bob Dylan,3,0
 Bombe,1,1
 Knochen,1,1
-KNOCHEN,2,0
 Freudenfeuer,3,1
-JBJ,3,1
 Booger,2,1
 Buch,1,1
 Bücherschrank,3,0
@@ -155,17 +147,16 @@ Stiefel,2,0
 Rahmen,3,0
 Flasche,1,1
 unten,2,0
-Zurückgewiesene Mails,3,1
+SPan,3,1
 Bogen,1,0
 Schüssel,1,1
 Bowling,2,1
 Bowser,2,1
-bowtie,2,1
-,1,0
+Fliege,2,1
 Boxen,2,0
 Armband,3,0
-Stützapparate und -Bandagen,2,0
-Bradpitt,3,1
+Zahnspange,2,0
+Brad Pitt,3,1
 Gehirn,2,1
 Bremsen,2,0
 Zweigstellen,2,0
@@ -244,7 +235,7 @@ Katze,1,1
 Katapult,2,0
 Wels,2,1
 Rohrkolben,3,0
-catwoman,2,1
+Catwoman,2,1
 Höhle,2,0
 Höhlenmensch,3,1
 CD,1,0
@@ -274,7 +265,7 @@ Kinder,2,0
 Schornstein,1,1
 Kinn,1,0
 China,3,0
-Pommes frites,2,0
+Pommes Frites,2,0
 Kirche,2,1
 Zigarre,2,0
 Kreis,1,0
@@ -292,7 +283,7 @@ Kleiderschrank,2,0
 Wolke,1,1
 Clown,2,1
 Verein,1,0
-COACH,3,1
+Trainer,3,1
 Kohle,2,0
 Jacke,1,0
 Kokosnuss,2,1
@@ -308,12 +299,11 @@ Komet,2,1
 Comic,3,0
 Kompass,2,1
 Computer,2,1
-conan,3,1
 Konzert,3,0
 Kegel,1,1
 Kochen,1,0
 Plätzchen,2,1
-Cookies,2,0
+Keks,2,0
 Kork,1,0
 Mais,1,1
 Corndog,2,1
@@ -323,12 +313,10 @@ Gericht,3,0
 Cover,2,0
 Kuh,1,1
 Cowboy,2,1
-cowgirl,3,1
+Cowgirl,3,1
 Krabbe,1,1
-knacken,2,0
-Crane,2,1
-sturz,2,0
-Crawl,3,0
+Nußknacker,2,0
+Sturz,2,0
 Buntstift,2,0
 Halbmond,2,1
 Krippe,2,0
@@ -343,14 +331,12 @@ Kristall,3,0
 Kuba,3,0
 schmusen,3,0
 Cueball,2,0
-Tasse(n),1,0
+Tasse,1,0
 Cupcake,1,1
 Cupid,2,1
-curl,3,0
 Vorhang,2,0
 Kunde,3,0
 schneiden,1,0
-süß,1,0
 Zyklop,2,1
 Draftpunk,2,1
 dallas,3,0
@@ -409,9 +395,8 @@ Türklinke,2,1
 Fußabtreter,3,0
 Türen,2,0
 Eingangsstufe,3,0
-Punkte,3,0
+Punkt,3,0
 Taube,2,0
-hinunter,2,0
 Dracula,3,1
 Drachen,1,1
 ablassen,2,0
@@ -419,11 +404,10 @@ Sceada,3,1
 Vorhang,3,0
 Unentschieden,2,0
 Schublade,2,0
-Ein Traum!,2,1
-dreidel,2,1
+Traum,2,1
 Kleid,2,0
 Kommode,3,0
-dribbeln,2,1
+Dribbling,2,1
 Bohrer,2,0
 Trinken,2,0
 Tropf,1,0
@@ -431,8 +415,7 @@ Platte,2,0
 Trommel,1,0
 Schlagzeuger,2,1
 Schlagzeug,2,1
-DRUMSET,3,0
-betrunken,2,0
+Suff,2,0
 Dubstep,3,1
 Ente,1,1
 Duell,3,0
@@ -450,9 +433,9 @@ Erde,2,1
 Ohrenschmalz,3,0
 Osten,1,1
 Ostern,3,1
-"Essen, den",1,0
+Essen,1,0
 Echo,1,0
-Eclipse*,2,1
+Sonnenfinsternis,2,1
 Kante,1,0
 Aal,2,1
 Ei,1,1
@@ -479,7 +462,7 @@ Espresso,3,0
 Europa,2,0
 böse,2,0
 Ewok,3,1
-explodieren,2,0
+Explosion,2,0
 Auge,1,1
 Augapfel,2,1
 Augenbraue,2,1
@@ -498,7 +481,6 @@ Reißzähne,2,1
 Fanpost,3,0
 Ventilatoren,2,1
 Farm,1,1
-Bauer Yams angepflanzt,2,0
 Furz,2,1
 Fastfood,3,0
 Vater,2,0
@@ -511,9 +493,7 @@ Zaun,2,0
 Fechten,3,1
 Farn,3,1
 Fähre,3,1
-festivus,3,0
 Fieber,2,0
-ausfüllen,2,0
 Kampf,2,0
 Flosse,1,0
 Finger,1,0
@@ -544,8 +524,6 @@ Zahnseide,3,1
 Mehl,2,0
 Blume,2,1
 Grippe,3,0
-bündig,3,0
-Fliegend,1,1
 Nebel,1,1
 Ordner,3,0
 Dummkopf,2,1
@@ -562,7 +540,6 @@ Begangenes,3,0
 Brunnens,2,1
 Fuchs,1,1
 Fraktion,3,0
-auszurichten,2,0
 Frankreich,2,1
 nicht gefrieren,3,0
 Kühlschrank,2,0
@@ -576,7 +553,6 @@ Frucht,2,1
 Beerdigung,3,0
 Trichter,1,1
 Pelz,1,0
-furby,3,1
 Galaxis,3,0
 Gameboy,2,1
 Gandalf,3,1
@@ -592,7 +568,7 @@ Getriebe,2,0
 Edelstein,1,0
 Keim,2,0
 Deutschland,2,1
-geronimo,3,0
+Geronimo,3,0
 Geist,1,1
 Geschenkverpackung,3,0
 Giraffe,2,1
@@ -610,9 +586,7 @@ Ziege,1,0
 Schutzbrille,2,1
 Gold,1,0
 Goldfisch,2,1
-golem,3,1
 Golf,2,1
-erreichen,2,1
 Golfclub,2,1
 doof,2,1
 Google,2,1
@@ -644,10 +618,8 @@ GZA,3,1
 Hagel,1,0
 Haar,1,1
 Haarschnitt,2,0
-hairdye,3,0
+Haarfärbung,3,0
 Haargel,3,0
-hairtie,3,0
-haarig,2,0
 Heiligenschein,1,1
 Schinken,2,0
 Hambone,2,0
@@ -709,7 +681,7 @@ Krankenhaus,2,1
 Hotdog,2,1
 Hotel,2,0
 Hotsauce,3,1
-Hottub,2,0
+Whirlpool,2,0
 Haus,2,1
 Umarmung,1,0
 Hulahoop,2,1
@@ -1014,7 +986,8 @@ Ozean,2,0
 Achteck,1,1
 Krake,1,1
 Geruch,2,0
-aus,2,0
+Ausgang,2,0
+Notausgang,2,0
 Öl,2,0
 Ölfeld,3,1
 Olympische Spiele,3,1
@@ -1063,8 +1036,7 @@ Eltern,3,0
 Paris,3,0
 Park,1,0
 Papagei,2,1
-partyhat,2,1
-passieren,2,1
+Partyhut,2,1
 Passwort,3,1
 Flicken,2,0
 Pfad,2,0
@@ -1181,7 +1153,6 @@ Pfützen,3,0
 Kotzen,2,0
 ziehen,2,0
 Kürbis,2,1
-schlagen,2,0
 Marionette,2,1
 Hündchen,2,1
 Geldbeutel,1,1
@@ -1230,14 +1201,12 @@ Nashorn,1,1
 Band,1,1
 Rippen,2,1
 Reis,2,0
-riddler,3,0
 Fahrt,1,0
 Gewehr,2,0
 Rihanna,3,1
 Rand,2,0
 Ring,1,1
 Klingelton,3,1
-welligkeit,2,0
 Risiko,3,1
 Fluss,1,1
 Straße,2,0
@@ -1277,7 +1246,6 @@ Salz,2,0
 Samba,3,0
 Sand,2,0
 Sandalen,2,1
-testen,2,0
 Sandwich,1,1
 Weihnachtsmann,2,1
 Saphir,3,0
@@ -1295,7 +1263,7 @@ Skorpion,1,1
 Schottland,3,1
 Scrabble,3,1
 Kratzer,2,0
-schreien,2,0
+Geschrei,2,0
 Bildschirm,2,0
 Schraube,2,0
 Meer,1,0
@@ -1324,7 +1292,6 @@ Schiff,2,0
 Hemd,1,1
 Schuh,1,1
 Schuhkarton,2,0
-Redom,2,0
 Schuhe,1,1
 Ufer,2,1
 Shorts,1,1
@@ -1355,8 +1322,6 @@ Schädel,2,1
 Stinktier,2,1
 Himmel,1,1
 Skyline,3,0
-skyrim,3,0
-zuschlagen,2,1
 Slamdunk,2,1
 Schlag,1,0
 Schlitten,1,0
@@ -1374,7 +1339,6 @@ Lächeln,1,1
 Nebligen,2,0
 Rauchen,2,0
 Smoothie,3,0
-smores,2,1
 Schnecke,1,1
 Schlange,1,1
 Snakepit,3,0
@@ -1407,8 +1371,8 @@ Suppe,1,0
 Süden,2,0
 Soyasauce,3,0
 Spanien,3,0
-funkelt,3,0
-sprechen,2,0
+Funke,3,0
+Sprache,2,0
 Speaker,3,0
 Speer,2,1
 Spinne,1,1
@@ -1426,8 +1390,7 @@ Elf,2,0
 Quadrat,2,0
 Tintenfisch,2,1
 Eichhörnchen,3,1
-stechen,1,0
-stabil,2,0
+Stich,1,0
 Stadion,3,1
 Stuffe,2,0
 Fleck,2,0
@@ -1435,16 +1398,15 @@ Treppen,2,1
 Stempel,2,1
 Hefter,3,0
 sterne,1,0
-glotzen,2,0
+Glotze,2,0
 Seestern,3,1
 Enterprise,2,1
-StarWars,2,1
+Star Wars,2,1
 Statue,2,1
 Steak,2,1
-stehlen,2,1
+Diebstahl,2,1
 Dampf,2,0
-steelers,2,1
-steil,2,0
+Gefälle,2,0
 Schritt,2,0
 Stereo,2,0
 Heck,3,0
@@ -1457,13 +1419,11 @@ Stop,2,1
 Storch,1,1
 Sturm,2,0
 Ofen,2,0
-geradlinig,3,0
 Stroh,1,1
 Strawman,3,0
 Strom,3,0
 Strasse,2,0
-strike,2,0
-string,2,0
+String,2,0
 Streifen,2,0
 Kinderwagen,2,1
 False,3,0
@@ -1476,26 +1436,20 @@ Sommer,2,0
 Sonne,1,1
 Sunblock,3,0
 Sonnenbrand,3,0
-sonnig,2,0
 Sonnenuntergang,2,1
 Sonnenschein,3,0
 Übermensch,1,1
-surfen,1,1
 Surfen,1,1
 Chirurg,3,0
 Überlebender,3,0
-sushi,2,1
+Sushi,2,1
 Schwan,1,1
 Schweiß,2,0
 Pullover,3,0
-verschwitzt,2,0
 Schweden,3,1
-süß,2,0
-Schwimmen,1,1
 Schwimmen,1,1
 Badeanzug,2,0
-schwingen,1,1
-Schaukeln,2,0
+Schwung,1,1
 Schaukel,3,0
 Schalter,2,0
 Rauschen,3,1
@@ -1509,7 +1463,6 @@ Schlagwort,1,0
 Schwanz,1,1
 Taiwan,3,1
 Start,3,0
-hoch,2,0
 Tango,2,0
 Panzer,1,1
 Klebeband,1,0
@@ -1518,13 +1471,12 @@ Tätowierung,2,1
 Taxi,1,1
 Tee,2,0
 Teebeutel,1,0
-lehrer,3,0
+Lehrer,3,0
 Teetasse,3,0
 Teekanne,2,0
 Tränenblech,3,0
 Tränen,2,1
 Teelöffel,2,0
-tebowing,3,1
 Techno,3,0
 Teenager,3,0
 Tipi,1,1
@@ -1534,17 +1486,15 @@ Tennis,2,1
 Zelt,1,1
 Tentakel,2,1
 Test,2,0
-tetris,2,1
+Tetris,2,1
 Theater,3,0
-thelorax,3,1
-theonion,3,0
 Dieb,2,0
 Schenkel,2,0
 dünn,3,0
 Dorn,2,0
 Kehle,2,0
 Thron,2,1
-werfen,2,1
+Wurf,2,1
 Daumen,1,1
 Donner,3,0
 Ticket,2,0
@@ -1552,26 +1502,24 @@ kitzeln,2,0
 Krawatte,1,1
 Tiger,1,1
 Kacheln,2,0
-mal,2,0
-TimeBomb,2,1
+Zeit,2,0
+Zeitbombe,2,1
 Zeitleiste,3,0
 Auszeit,2,1
 Zeitzone,3,0
-tinafey,3,1
 Reifen,1,0
-PAPIERTÜCHER,2,1
-titanische,3,1
+Taschentuch,2,1
+Titan,3,1
 Kröte,1,0
-TOAST,2,0
+Toast,2,0
 Toaster,2,1
 Zehe,1,1
 Zehennagel,2,0
 Toga,3,0
-WC,1,1
+Toilette,1,1
 Tomate,2,1
 Grab,2,0
-tombrady,3,0
-tomhanks,3,0
+Tom Hanks,3,0
 Zunge,1,1
 Werkzeug,1,0
 Werkzeugkasten,2,1
@@ -1599,10 +1547,9 @@ Stativ,2,1
 Troll,2,1
 Posaune,2,1
 Trophäe,2,1
-tropisch,3,0
+Tropen,3,0
 Schwierigkeiten,3,0
 Stapler,2,0
-Trump,3,1
 Trompete,2,1
 Kofferraum,2,0
 T-Shirt,2,1
@@ -1637,23 +1584,21 @@ UFO,1,1
 hässlich,3,0
 Ukulele,2,1
 Regenschirm,1,1
-unterhalb,2,0
-Synophrys,2,1
+Monobraue,2,1
 Einhorn,1,1
 Einrad,2,1
 Union,3,0
 UNO,3,0
 Aufwärtshaken,2,1
-nach oben,3,0
 Uranus,3,0
-Urchin,1,1
-Vereinigte Staaten,2,1
+Seeigel,1,1
+USA,2,1
 USB,3,1
 Platzanweiser,3,1
 Urlaub,3,0
 Impfstoff,3,0
 Vakuum,2,1
-vader,3,1
+Darth Vader,3,1
 Tal,2,0
 Vampir,2,1
 von,1,0
@@ -1718,7 +1663,6 @@ Flechtwerk,2,0
 Welle,1,1
 Winken,2,0
 Wachs,1,0
-schwach,3,0
 Webart,2,0
 Hochzeitsfeier,3,1
 Keil,2,1
@@ -1727,10 +1671,8 @@ Gras,1,0
 Woche,2,0
 Weinen,2,0
 Gewichte,3,0
-unheimlich,3,0
 Werwolf,3,1
 Westen,1,0
-feucht,2,1
 Wal,2,1
 Weizen,3,0
 Rad,2,0
@@ -1741,7 +1683,6 @@ flüstern,3,0
 Pfeife,3,0
 Weiß,2,1
 Whopper,2,1
-böse,3,0
 Widget,3,0
 Witwe,3,0
 Ehefrau,2,0
@@ -1757,13 +1698,13 @@ Fenster,2,1
 Fenster,2,1
 Wein,1,0
 Flügel,1,1
-wingman,3,1
-Wingnut,2,0
+Wingman,3,1
+Flügelmutter,2,0
 Zwinkern,1,1
 Gewinner,2,0
 Winter,2,0
 Draht,1,0
-W-LAN,2,1
+WLAN,2,1
 weise,3,0
 Hexe,2,1
 Zeuge,3,0
@@ -1792,7 +1733,7 @@ Kopierer,3,0
 Röntgen,2,1
 Yacht,2,0
 Yahtzee,3,0
-Yardsale,3,0
+Flohmarkt,3,0
 Garn,1,1
 Gähnen,2,0
 Jahrbuch,3,1
