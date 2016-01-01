@@ -308,9 +308,7 @@ $(document).ready(function() {
 		}
 		myturn = false;
 		canvas.css('background-color', '#ccc');
-		selectedcolor.val("#000000");
-		selectedcolor.css('background-color', '#000000');
-		selectedcolor.css('color', '#fff');
+		selectedcolor.spectrum('set', '#000');
 	});
 	
 	socket.on('youCanDraw', function(msg) {
