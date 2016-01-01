@@ -4,9 +4,21 @@ $(document).ready(function() {
 	var status = $('#status'),
 		people = $('#people'),
 		chatinput = $('#chatinput'),
-		chatnick = $('#chatnick');
+		chatnick = $('#chatnick'),
+		$joinButton = $('#joinButton');
 	
 	socket.on('connect', function () {
+		$("#initial").hide();
+		$("#join").show();
+	});
+	
+	$joinButton.click(function() {
+		socket.emit('join', { nick: $('#joinNick').val() });
+	});
+	
+	socket.on('joined', function() {
+		$('#join').hide();
+		$('#game').show();
 		status.text('Click Ready to draw! button to start drawing');
 		chatinput.removeProp('disabled');
 		chatnick.removeProp('disabled');

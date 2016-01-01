@@ -8,7 +8,7 @@ app.listen(port);
 console.log('>>> Sketchers started on port ' + port + ' >>>');
 
 // ================================================
-//                           server routing section
+// server routing
 // ================================================
 
 function handler (req, res) {
@@ -61,11 +61,11 @@ function handler (req, res) {
 }
 
 // ================================================
-//                                app logic section
+// app logic
 // ================================================
 
 var users = [], canvas = [];
-var dictionary, currentWord, currentPlayer; 
+var dictionary, currentWord = null, currentPlayer; 
 var drawingTimer = null, hintIntervalId = null;
 var playerUID = 1;
 var roundStartTime;
@@ -90,25 +90,8 @@ io.sockets.on('connection', function (socket) {
 	var myNick = 'Player' + playerUID++,
 		myColor = rndColor();
 		myScore = 0;
-	
-	var user = { id: socket.id, nick: myNick, color: myColor, score: myScore, guessedCorrectly:false, isCurrent:false };
-	users.push(user);
-	usersById[socket.id] = user;
+		
 	socketsById[socket.id] = socket;
-	io.sockets.emit('userJoined', { nick: myNick, color: myColor });
-	io.sockets.emit('users', users);
-	socket.emit('drawCanvas', canvas);
-	
-	// notify if someone is drawing
-	if(currentPlayer) {
-		for(var i = 0; i<users.length; i++) {
-			if(users[i].id == currentPlayer) {
-				var timePassedSecs = Math.floor((new Date().getTime() - roundStartTime) / 1000);
-				socket.emit('startRound', { color: users[i].color, nick: users[i].nick, time: roundTime-timePassedSecs, hint:currentHint });
-				break;
-			}
-		}
-	}
 	
 	function getRandomInt(min, max) {
 	    return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -188,6 +171,31 @@ io.sockets.on('connection', function (socket) {
 		hintIntervalId = setInterval(provideHint, hintInterval);
 		roundStartTime = new Date().getTime();
 	}
+	
+	socket.on('join', function(msg) {
+		console.log('Player joined: nick=' + msg.nick);
+		if (msg.nick) {
+			myNick = sanitizer.sanitize(msg.nick);
+		}
+		
+		// add user
+		var user = { id: socket.id, nick: myNick, color: myColor, score: myScore, guessedCorrectly:false, isCurrent:false };
+		users.push(user);
+		usersById[socket.id] = user;
+		socket.emit('joined');
+		io.sockets.emit('userJoined', { nick: myNick, color: myColor });
+		io.sockets.emit('users', users);
+		socket.emit('drawCanvas', canvas);
+		
+		// notify if someone is drawing
+		if(currentPlayer) {
+			currentUser = usersById[currentPlayer];
+			if (currentUser) {
+				var timePassedSecs = Math.floor((new Date().getTime() - roundStartTime) / 1000);
+				socket.emit('startRound', { color: currentUser.color, nick: currentUser.nick, time: roundTime-timePassedSecs, hint:currentHint });
+			}
+		}
+	});
 	
 	socket.on('message', function (msg) {
 		var sanitizedMsg = sanitizer.sanitize(msg.text);
@@ -332,10 +340,6 @@ io.sockets.on('connection', function (socket) {
 	function sortUsersByScore() {
 		users.sort(function(a,b) { return parseFloat(b.score) - parseFloat(a.score); } );
 	}
-	
-	// =================
-	// pictionary logic section
-	// =================
 	
 	socket.on('readyToDraw', function () {
 		if (!currentPlayer) { // new round triggered

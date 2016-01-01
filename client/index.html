@@ -10,29 +10,35 @@
 		<script type="text/javascript" src="scripts/jscolor/jscolor.js"></script>
 	</head>
 	<body>
-		<div id="main">
-			<img src="title.png" style="margin-bottom:10px;">	
-			<div id="status">Status: offline</div>
-			<div id="firstpanel">
-				<div id="people"></div>
-				<input type="button" id="readytodraw" value="Ready to draw!" />
-				<div id="timer"></div>
+		<div id="main" >
+			<img src="title.png" style="margin-bottom:10px;">
+			<div id="initial">Connecting...</div>
+			<div id="join" style="display:none">
+				User name: <input id="joinNick" type="text" maxlength="30">&nbsp;&nbsp;<button id="joinButton" value="Join"> Join Game </button>
 			</div>
-			<div id="secondpanel">
-				<div id="hint"></div>		
-				<div id="canvasframe">		
-					<canvas id="canvas" width="500" height="500"></canvas>
+			<div id="game" style="display:none;">	
+				<div id="status">Status: offline</div>
+				<div id="firstpanel">
+					<div id="people"></div>
+					<input type="button" id="readytodraw" value="Ready to draw!" />
+					<div id="timer"></div>
 				</div>
-				<input type="button" id="clearcanvas" value="Clear canvas" />
-				<input class="color {hash:true}" value="000000">				
-			</div>
-			<div id="thirdpanel">
-				<div id="chatcontent"></div>
-				<input type="text" id="chatinput" disabled="disabled" maxlength="256" placeholder="Guess/chat message" /><br/>
-				<input type="button" id="clearchat" value="Clear chat" />
-				
-				<div><input type="text" id="chatnick" disabled="disabled" value="" maxlength="32" placeholder="Change nickname" /></div>
-				<div></div><input type="button" id="changenickcolor" value="Change user color" /></div>
+				<div id="secondpanel">
+					<div id="hint"></div>		
+					<div id="canvasframe">		
+						<canvas id="canvas" width="500" height="500"></canvas>
+					</div>
+					<input type="button" id="clearcanvas" value="Clear canvas" />
+					<input class="color {hash:true}" value="000000">				
+				</div>
+				<div id="thirdpanel">
+					<div id="chatcontent"></div>
+					<input type="text" id="chatinput" disabled="disabled" maxlength="256" placeholder="Guess/chat message" /><br/>
+					<input type="button" id="clearchat" value="Clear chat" />
+					
+					<div style="display:none"><input type="text" id="chatnick" disabled="disabled" value="" maxlength="32" placeholder="Change nickname" /></div>
+					<div></div><input type="button" id="changenickcolor" value="Change user color" /></div>
+				</div>
 			</div>
 		</div>
 	</body>
