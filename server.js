@@ -241,7 +241,7 @@ io.sockets.on('connection', function (socket) {
 			var allGuessed = playerIndicesGuessedCorrectly.length == users.length-1;
 			
 			if (correctGuessEndsTurn || allGuessed) {
-				turnFinished();
+				turnFinished(false, allGuessed);
 			}
 		}
 	});
@@ -333,11 +333,11 @@ io.sockets.on('connection', function (socket) {
 			startTurn(socket.id);
 		} else if (currentPlayer == socket.id) { // pass
 			// turn off drawing timer
-			turnFinished();
+			turnFinished(true);
 		}
 	});
 	
-	function turnFinished() {
+	function turnFinished(opt_pass, opt_allGuessed) {
 		var drawingPlayerIndex = 0;
 		for(; drawingPlayerIndex < users.length; drawingPlayerIndex++)
 			if (users[drawingPlayerIndex].id == currentPlayer) 
@@ -353,7 +353,7 @@ io.sockets.on('connection', function (socket) {
 			hintIntervalId = null;
 		}
 		
-		io.sockets.emit('endRound', { word: currentWord });
+		io.sockets.emit('endRound', { word: currentWord, isPass: opt_pass, allGuessed: opt_allGuessed });
 
 		currentPlayer = null;
 	

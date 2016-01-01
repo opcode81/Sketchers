@@ -261,8 +261,18 @@ $(document).ready(function() {
 		chatScrollDown();
 	});
 	
-	socket.on('endRound', function(msg) {
-		chatcontent.append('<p>&raquo; This round is over. The word was <strong>' + msg.word + '</strong>.</p>');
+	socket.on('endRound', function(msg) { 
+		var message;
+		if (msg.isPass) {
+			message = 'Player passed';
+		}
+		else if (msg.allGuessed) {
+			message = 'All players guessed correctly';
+		}
+		else {
+			message = 'This round is over';
+		}
+		chatcontent.append('<p>&raquo; ' + message + '. The word was <strong>' + msg.word + '</strong>.</p>');
 		chatScrollDown();
 		console.log("endRound");
 		if (drawingTimer != null) {
@@ -294,7 +304,7 @@ $(document).ready(function() {
 	});
 	
 	socket.on('wordGuessed', function(msg) {
-		chatcontent.append('<p>&raquo; <span style="color:' + msg.color + '">' + msg.nick + '</span> guessed the word (<strong>' + msg.text + '</strong>.</p>');
+		chatcontent.append('<p>&raquo; <span style="color:' + msg.color + '">' + msg.nick + '</span> guessed the word (<strong>' + msg.text + '</strong>).</p>');
 		chatScrollDown();
 	});
 		
