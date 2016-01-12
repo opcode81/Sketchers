@@ -323,7 +323,6 @@ Vorhang,2,0
 Kunde,3,0
 Schnitt,1,0
 Zyklop,2,1
-Dallas,3,0
 Tanz,2,1
 Schuppen,3,1
 Gefahr,2,0
@@ -772,7 +771,6 @@ Links,2,0
 Bein,1,1
 Zitrone,1,1
 Limonade,2,1
-Zitronen,2,0
 Glas,1,0
 Leopard,3,0
 Anschreiben,2,0
@@ -1118,7 +1116,6 @@ Rennen,2,0
 Rennwagen,3,0
 Radar,2,1
 Radio,2,0
-Raekwon,3,1
 Floß,1,1
 Lappen,1,0
 Jäger,2,0
@@ -1130,7 +1127,6 @@ Regentropfen,2,0
 Rosine,2,0
 Rampe,1,1
 Rap,3,0
-Entzücken,3,1
 Ratte,1,1
 Rassel,1,1
 Rasierer,2,0
@@ -1155,7 +1151,6 @@ Klingelton,3,1
 Risiko,3,1
 Fluss,1,1
 Straße,2,0
-Roadkill,3,1
 Braten,2,1
 Räuber,2,0
 Robe,2,0
@@ -1543,7 +1538,6 @@ Tal,2,0
 Vampir,2,1
 Vase,1,1
 Tresor,3,0
-Vegas,3,1
 Schleier,2,0
 Vene,3,0
 Klettband,3,0
