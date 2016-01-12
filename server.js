@@ -65,7 +65,7 @@ function handler (req, res) {
 // ================================================
 
 var users = [], canvas = [];
-var dictionary, currentWord = null, currentPlayer; 
+var dictionary, currentWord = null, currentPlayer = null; 
 var drawingTimer = null, hintIntervalId = null;
 var playerUID = 1;
 var roundStartTime;
@@ -183,7 +183,7 @@ io.sockets.on('connection', function (socket) {
 		// send messages
 		socketsById[playerId].emit('youDraw', word);
 		io.sockets.emit('startRound', { color: user.color, nick: user.nick, time:roundTime, hint:currentHint });
-		io.sockets.emit('users', users);
+		io.sockets.emit('users', sortedUsers());
 		
 		playerIndicesGuessedCorrectly = [];
 		
@@ -205,7 +205,7 @@ io.sockets.on('connection', function (socket) {
 		usersById[socket.id] = user;
 		socket.emit('joined');
 		io.sockets.emit('userJoined', { nick: myNick, color: myColor });
-		io.sockets.emit('users', users);
+		io.sockets.emit('users', sortedUsers());
 		socket.emit('drawCanvas', canvas);
 		
 		// notify if someone is drawing
@@ -272,8 +272,7 @@ io.sockets.on('connection', function (socket) {
 				socket.emit('youGuessedIt');
 				
 				// communicate new scores
-				sortUsersByScore();
-				io.sockets.emit('users', users);
+				io.sockets.emit('users', sortedUsers());
 				
 				var allGuessed = playerIndicesGuessedCorrectly.length == users.length-1;
 				
@@ -303,10 +302,11 @@ io.sockets.on('connection', function (socket) {
 			}
 		}
 		
-		io.sockets.emit('users', users);
+		io.sockets.emit('users', sortedUsers());
 	});
 	
 	socket.on('disconnect', function () {
+		console.log('user disconnected: ' + socket.id);
 		io.sockets.emit('userLeft', { nick: myNick, color: myColor });
 		for(var i = 0; i<users.length; i++) {
 			if(users[i].id == socket.id) {
@@ -316,7 +316,7 @@ io.sockets.on('connection', function (socket) {
 			}
 		}
 		
-		io.sockets.emit('users', users);
+		io.sockets.emit('users', sortedUsers());
 		
 		if(currentPlayer == socket.id) {
 			// turn off drawing timer
@@ -334,7 +334,9 @@ io.sockets.on('connection', function (socket) {
 	});
 	
 	socket.on('clearCanvas', function () {
+		console.log('received clearCanvas');
 		if(currentPlayer == socket.id) {
+			console.log('clearCanvas from current player can be processed');
 			canvas.splice(0, canvas.length);
 			io.sockets.emit('clearCanvas');
 		}
@@ -350,7 +352,7 @@ io.sockets.on('connection', function (socket) {
 			}
 		}
 		
-		io.sockets.emit('users', users);
+		io.sockets.emit('users', sortedUsers());
 	});
 	
 	function rndColor() {
@@ -358,12 +360,15 @@ io.sockets.on('connection', function (socket) {
 		return color;
 	};
 	
-	function sortUsersByScore() {
-		users.sort(function(a,b) { return parseFloat(b.score) - parseFloat(a.score); } );
+	function sortedUsers() {
+		var theUsers = users.slice();
+		theUsers.sort(function(a,b) { return parseFloat(b.score) - parseFloat(a.score); } );
+		return theUsers;
 	}
 	
 	socket.on('readyToDraw', function () {
 		if (!currentPlayer) { // new round triggered
+			console.log('ready: player ' + socket.id);
 			startTurn(socket.id);
 		} else if (currentPlayer == socket.id) { // pass
 			// turn off drawing timer
@@ -372,6 +377,7 @@ io.sockets.on('connection', function (socket) {
 	});
 	
 	function turnFinished(opt_pass, opt_allGuessed) {
+		console.log('turn finished: users.length=' + users.length);
 		var drawingPlayerIndex = 0;
 		for(; drawingPlayerIndex < users.length; drawingPlayerIndex++)
 			if (users[drawingPlayerIndex].id == currentPlayer) 
@@ -393,6 +399,7 @@ io.sockets.on('connection', function (socket) {
 	
 		// allow next user to draw
 		if (autoSelectNextPlayer) {
+			console.log('drawingPlayerIndex=' + drawingPlayerIndex + ', users.length=' + users.length);
 			var user = users[(drawingPlayerIndex+1) % users.length];
 			if (user == undefined)
 				console.log("no user");
