@@ -805,7 +805,6 @@ Liebe,2,1
 Turteltaube,3,0
 Gepäck,2,0
 Luigi,2,1
-Lukas,3,1
 Bauholz,2,0
 Mittag,2,0
 Lunge,2,0
