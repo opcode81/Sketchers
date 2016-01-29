@@ -137,6 +137,10 @@ io.sockets.on('connection', function (socket) {
 		io.sockets.emit('hint', {hint: currentHint});
 	}
 	
+	function emitUsers() {
+		io.sockets.emit('users', sortedUsers());
+	}
+	
 	function startTurn(playerId) {
 		roundNo++;
 		console.log("Round #" + roundNo);
@@ -183,7 +187,7 @@ io.sockets.on('connection', function (socket) {
 		// send messages
 		socketsById[playerId].emit('youDraw', word);
 		io.sockets.emit('startRound', { color: user.color, nick: user.nick, time:roundTime, hint:currentHint });
-		io.sockets.emit('users', sortedUsers());
+		emitUsers();
 		
 		playerIndicesGuessedCorrectly = [];
 		
@@ -205,7 +209,7 @@ io.sockets.on('connection', function (socket) {
 		usersById[socket.id] = user;
 		socket.emit('joined');
 		io.sockets.emit('userJoined', { nick: myNick, color: myColor });
-		io.sockets.emit('users', sortedUsers());
+		emitUsers();
 		socket.emit('drawCanvas', canvas);
 		
 		// notify if someone is drawing
@@ -272,7 +276,7 @@ io.sockets.on('connection', function (socket) {
 				socket.emit('youGuessedIt');
 				
 				// communicate new scores
-				io.sockets.emit('users', sortedUsers());
+				emitUsers();
 				
 				var allGuessed = playerIndicesGuessedCorrectly.length == users.length-1;
 				
@@ -302,7 +306,7 @@ io.sockets.on('connection', function (socket) {
 			}
 		}
 		
-		io.sockets.emit('users', sortedUsers());
+		emitUsers();
 	});
 	
 	socket.on('disconnect', function () {
@@ -316,7 +320,7 @@ io.sockets.on('connection', function (socket) {
 			}
 		}
 		
-		io.sockets.emit('users', sortedUsers());
+		emitUsers();
 		
 		if(currentPlayer == socket.id) {
 			// turn off drawing timer
@@ -352,7 +356,7 @@ io.sockets.on('connection', function (socket) {
 			}
 		}
 		
-		io.sockets.emit('users', sortedUsers());
+		emitUsers();
 	});
 	
 	function rndColor() {
