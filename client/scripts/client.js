@@ -243,7 +243,7 @@ $(document).ready(function() {
 	});
 	
 	// ================================================
-	//                           pictionary logic section
+	//                           game logic section
 	// ================================================
 	
 	var readytodraw = $('#readytodraw'), 
@@ -267,6 +267,7 @@ $(document).ready(function() {
 		canvas.css('background-color', '#fff');
 		myword = word;
 		status.html('Your word is: <b>' + myword[0] + '</b> (difficulty: ' + myword[1] + ')');
+		$('#game').addClass('drawing');
 	});
 	
 	socket.on('startRound', function(msg) {
@@ -308,6 +309,7 @@ $(document).ready(function() {
 			drawingTimer = null;
 		}
 		myturn = false;
+		$('#game').removeClass('drawing');
 		canvas.css('background-color', '#ccc');
 		selectedcolor.spectrum('set', '#000');
 		$lineWidth.val(2);

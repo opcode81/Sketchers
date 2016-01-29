@@ -194,3 +194,11 @@ td.score {
 	padding-right:5px;
 }
 
+#game #drawingControls {
+	display:none;
+}
+
+#game.drawing #drawingControls {
+	display:block;
+}
+
