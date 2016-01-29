@@ -77,7 +77,7 @@ var currentHint, numCurrentHintsProvided;
 var roundTime = 120, roundNo = 0;
 var correctGuessEndsTurn = false;
 var scoreByRemainingTime = true; // if false, score constant
-var autoSelectNextPlayer = true; // if true, players must manually select the next player
+var autoSelectNextPlayer = true; // if false, players must manually select the next player
 var maxHints = 4;
 var maxHintFraction = 0.40;
 

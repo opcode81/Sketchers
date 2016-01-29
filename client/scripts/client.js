@@ -187,7 +187,7 @@ $(document).ready(function() {
 	canvas.mousemove(function(e) {
 		if(myturn && painting) {
 			var newpoint = { x: e.pageX - this.offsetLeft, y: e.pageY - this.offsetTop},
-				line = { from: lastpoint, to: newpoint, color: selectedcolor.val() };
+				line = { from: lastpoint, to: newpoint, color: selectedcolor.spectrum('get').toHexString() };
 			
 			draw(line);
 			lastpoint = newpoint;
