@@ -208,7 +208,7 @@ $(document).ready(function() {
 	});
 	
 	canvas.mouseover(function(e) {
-		if (mouseoutWhilePainting) {
+		if (mouseoutWhilePainting && e.buttons == 1) { // returning to canvas with button still pressed
 			painting = true;
 			mouseoutWhilePainting = false;
 			lastpoint = null;
