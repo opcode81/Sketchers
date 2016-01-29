@@ -93,13 +93,25 @@ input, button {
 	width:500px;
 	height:500px;
 	border-radius:5px;
-	border:2px solid #ccc;
+	border:4px solid #ccc;
 }
 
-#canvas
+#game #canvas {
+	cursor:normal;
+	background:white;
+}
+
+#game.drawing #canvas
 {
 	cursor:crosshair;
-	background:#ccc;
+}
+
+#game.drawing #canvasframe {
+	border-color: #2875AB;
+}
+
+#game.guessedIt #canvasframe {
+	border-color: yellow;
 }
 
 /* ---------------------- */

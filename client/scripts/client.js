@@ -264,7 +264,6 @@ $(document).ready(function() {
 	socket.on('youDraw', function(word) {
 		myturn = true;
 		console.log("youDraw");
-		canvas.css('background-color', '#fff');
 		myword = word;
 		status.html('Your word is: <b>' + myword[0] + '</b> (difficulty: ' + myword[1] + ')');
 		$('#game').addClass('drawing');
@@ -310,7 +309,7 @@ $(document).ready(function() {
 		}
 		myturn = false;
 		$('#game').removeClass('drawing');
-		canvas.css('background-color', '#ccc');
+		$('#game').removeClass('guessedIt');
 		selectedcolor.spectrum('set', '#000');
 		$lineWidth.val(2);
 	});
@@ -329,7 +328,7 @@ $(document).ready(function() {
 	});
 	
 	socket.on('youGuessedIt', function(msg) {
-		canvas.css('background-color', 'yellow');
+		$('#game').addClass('guessedIt');
 	});
 	
 	var formatUser = function(data) {
