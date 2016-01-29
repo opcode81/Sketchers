@@ -146,6 +146,7 @@ $(document).ready(function() {
 		context = canvas[0].getContext('2d'),
 		lastpoint = null,
 		painting = false,
+		mouseoutWhilePainting = false,
 		myturn = false;
 	
 	socket.on('draw', draw);
@@ -172,35 +173,47 @@ $(document).ready(function() {
 		return false;
 	});
 	
+	var drawWithEvent = function(canvas, e) {
+		var newpoint = { x: e.pageX - canvas.offsetLeft, y: e.pageY - canvas.offsetTop};
+		line = { from: lastpoint, to: newpoint, color: selectedcolor.spectrum('get').toHexString(), width: $lineWidth.val() };
+		draw(line);
+		lastpoint = newpoint;
+		socket.emit('draw', line);
+	};
+	
 	canvas.mousedown(function(e) {
 		if(myturn) {
 			painting = true;
-			var newpoint = { x: e.pageX - this.offsetLeft, y: e.pageY - this.offsetTop},
-				line = { from: null, to: newpoint, color: selectedcolor.val(), width: $lineWidth.val()};
-			
-			draw(line);
-			lastpoint = newpoint;
-			socket.emit('draw', line);
+			mouseoutWhilePainting = false;
+			lastpoint = null;
+			drawWithEvent(this, e);
 		}
 	});
 	
 	canvas.mousemove(function(e) {
 		if(myturn && painting) {
-			var newpoint = { x: e.pageX - this.offsetLeft, y: e.pageY - this.offsetTop},
-				line = { from: lastpoint, to: newpoint, color: selectedcolor.spectrum('get').toHexString() };
-			
-			draw(line);
-			lastpoint = newpoint;
-			socket.emit('draw', line);
+			drawWithEvent(this, e);
 		}
 	});
 	
 	canvas.mouseout(function(e) {
-		painting = false;
+		if (painting) {
+			mouseoutWhilePainting = true;
+			painting = false;
+		}
 	});
 	
 	canvas.mouseup(function(e) {
 		painting = false;
+	});
+	
+	canvas.mouseover(function(e) {
+		if (mouseoutWhilePainting) {
+			painting = true;
+			mouseoutWhilePainting = false;
+			lastpoint = null;
+			drawWithEvent(this, e);
+		}
 	});
 	
 	socket.on('drawCanvas', function(canvasToDraw) {
