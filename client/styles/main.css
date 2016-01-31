@@ -4,7 +4,7 @@
 
 body
 {
-	background:#A96A6A;
+	background:white;
 	font-family:Calibri,Tahoma;
 	font-size:12px;
 }
@@ -15,10 +15,12 @@ input, button {
 
 #main
 {
-	width:1100px;
-	margin-left:auto;
-	margin-right:auto;
-	margin-top:10px;
+	background:#A96A6A;
+	border-radius: 5px;
+	padding: 20px;
+	display: inline-block;
+	margin: 30px;
+	box-shadow: 5px 5px 5px #ccc
 }
 
 #status
@@ -27,6 +29,7 @@ input, button {
 	margin-bottom:15px;
 	color:#fff;
 	font-size:15px;
+	text-align:center;
 }
 
 ::-webkit-scrollbar {
@@ -43,14 +46,24 @@ input, button {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.5);
 }
 
+#panels {
+	display: table-row;
+}
+
+#game {
+	display:table;
+}
+
+
 /* ---------------------- */
 /* first panel section */
 /* ---------------------- */
 
 #firstpanel
 {
-	float:left;
+	display: table-cell;
 	width:190px;
+	vertical-align:top;
 }
 
 #people
@@ -59,7 +72,7 @@ input, button {
 	border-radius:5px;
 	border:1px solid #ccc;
 	width:180px;
-	height:200px;
+	max-height:340px;
 	overflow: auto;
 	overflow-x: hidden;
 	padding-top:5px;
@@ -85,8 +98,9 @@ input, button {
 
 #secondpanel
 {
-	margin-left:30px;
-	float:left;
+	padding-left:15px;
+	display: table-cell;
+	vertical-align:top;
 }
 
 #canvasframe {
@@ -120,9 +134,10 @@ input, button {
 
 #thirdpanel
 {
-	margin-left:30px;
-	float:left;
-	width:320px;
+	padding-left: 15px;
+	display: table-cell;
+	width: 320px;
+	vertical-align: top;
 }
 
 #chatcontent
@@ -131,7 +146,7 @@ input, button {
 	border-radius:5px;
 	border:1px solid #ccc;
 	width:300px;
-	height:400px;
+	height:450px;
 	overflow: auto;
 	overflow-x: hidden;
 	padding-top:5px;

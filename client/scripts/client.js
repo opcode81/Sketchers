@@ -282,7 +282,7 @@ $(document).ready(function() {
 		myturn = true;
 		console.log("youDraw");
 		myword = word;
-		status.html('Your word is: <b>' + myword[0] + '</b> (difficulty: ' + myword[1] + ')');
+		status.html('Your word is<br><b style="font-size:130%">' + myword[0] + '</b><br>(difficulty: ' + myword[1] + ')');
 		$('#game').addClass('drawing');
 	});
 	
