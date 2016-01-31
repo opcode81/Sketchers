@@ -52,7 +52,10 @@ $(document).ready(function() {
 			row += '<span style="color:' + users[i].color + '">' + users[i].nick + '</span>';
 			if (users[i].isCurrent)
 				row += ' <img src="pencil.png" height=9>';
-			row += '</td></tr>';
+			row += '</td>';
+			if (users[i].scoreCurrentRound !== undefined)
+				row += '<td>+' + users[i].scoreCurrentRound + '</td>';
+			row += '</tr>';
 			$table.append(row);
 		}
 		people.append($table);
@@ -349,13 +352,7 @@ $(document).ready(function() {
 	};
 	
 	socket.on('wordGuessed', function(msg) {
-		var message = '<p>&raquo; ' + formatUser(msg) + ' guessed the word after ' + msg.timePassedSecs + ' s:<br>';
-		$.each(msg.points, function(i, pair) {
-			if (i > 0)
-				message += '<br>';
-			message += formatUser(pair[0]) + ' <b>+' + pair[1] + '</b>';
-		});
-		message += '</p>';
+		var message = '<p>&raquo; ' + formatUser(msg) + ' guessed the word after ' + msg.timePassedSecs + ' s.</p>';
 		chatcontent.append(message);
 		chatScrollDown();
 	});
