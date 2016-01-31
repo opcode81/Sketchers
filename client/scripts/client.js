@@ -49,12 +49,13 @@ $(document).ready(function() {
 			var row = '<tr><td class="score">' + users[i].score + '</td><td>';
 			if (users[i].guessedCorrectly)
 				row += '<img src="star.png">&nbsp;';
-			row += '<span style="color:' + users[i].color + '">' + users[i].nick + '</span>';
 			if (users[i].isCurrent)
 				row += ' <img src="pencil.png" height=9>';
+			row += '</td><td class="username">';
+			row += '<div class="ellipsis" style="color:' + users[i].color + '">' + users[i].nick + '</span>';
 			row += '</td>';
 			if (users[i].scoreCurrentRound !== undefined)
-				row += '<td>+' + users[i].scoreCurrentRound + '</td>';
+				row += '<td class="scoreRound">+' + users[i].scoreCurrentRound + '</td>';
 			row += '</tr>';
 			$table.append(row);
 		}

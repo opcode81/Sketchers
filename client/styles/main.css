@@ -201,9 +201,23 @@ input, button {
 	color: white;
 }
 
-td.score {
+.ellipsis {
+	white-space: nowrap;
+  	overflow: hidden;
+  	text-overflow: ellipsis;
+}
+
+table.users td.score {
 	text-align:right;
 	padding-right:5px;
+}
+
+table.users td.username > div {
+	max-width: 100px;
+}
+
+table.users td.scoreRound {
+	padding-left: 8px;
 }
 
 #game #drawingControls {

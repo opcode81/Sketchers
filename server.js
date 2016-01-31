@@ -270,7 +270,6 @@ io.sockets.on('connection', function (socket) {
 							points = 10;
 						users[i].score += points;
 						users[i].scoreCurrentRound = points;
-						users[i].guessedCorrectly = true;
 						pointsAwarded.push([users[i], points]);
 					}
 				}
