@@ -80,6 +80,7 @@ var scoreByRemainingTime = true; // if false, score constant
 var autoSelectNextPlayer = true; // if false, players must manually select the next player
 var maxHints = 4;
 var maxHintFraction = 0.40;
+var timeBetweenRounds = 5;
 
 function shuffle(array) {
 	  var currentIndex = array.length, temporaryValue, randomIndex;
@@ -399,20 +400,27 @@ io.sockets.on('connection', function (socket) {
 			hintIntervalId = null;
 		}
 		
-		io.sockets.emit('endRound', { word: currentWord, isPass: opt_pass, allGuessed: opt_allGuessed });
-
 		currentPlayer = null;
+		var nextPlayer = users[(drawingPlayerIndex+1) % users.length];
+		
+		io.sockets.emit('endRound', { 
+			word: currentWord, isPass: opt_pass, allGuessed: opt_allGuessed, 
+			timeUntilNextRound: autoSelectNextPlayer ? timeBetweenRounds : undefined,
+			nextPlayer: nextPlayer});
 	
 		// allow next user to draw
 		if (autoSelectNextPlayer) {
-			console.log('drawingPlayerIndex=' + drawingPlayerIndex + ', users.length=' + users.length);
-			var user = users[(drawingPlayerIndex+1) % users.length];
-			if (user == undefined)
-				console.log("no user");
-			else {
-				console.log('turn finished; new player ID: ' + user.id);
-				startTurn(user.id);
-			}
+			console.log('Waiting ' + timeBetweenRounds + ' seconds to start next round');
+			setTimeout(function() {
+					nextPlayer = users[(drawingPlayerIndex+1) % users.length];
+					console.log('drawingPlayerIndex=' + drawingPlayerIndex + ', users.length=' + users.length);
+					if (nextPlayer == undefined)
+						console.log("no user");
+					else {
+						console.log('turn finished; new player ID: ' + nextPlayer.id);
+						startTurn(nextPlayer.id);
+					}
+				}, timeBetweenRounds*1000);
 		}
 		else {
 			currentPlayer = null;

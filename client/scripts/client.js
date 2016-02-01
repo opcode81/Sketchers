@@ -277,7 +277,8 @@ $(document).ready(function() {
 		$hint = $('#hint'),
 		myword = '',
 		timeleft = null,
-		drawingTimer = null;
+		drawingTimer = null,
+		roundRunning = false;
 	
 	function setHint(hint) {
 		$hint.html(hint.split('').join('&nbsp;'));
@@ -296,21 +297,34 @@ $(document).ready(function() {
 		play(sndStartYourTurn);
 	});
 	
+	function startTimer(seconds) {
+		stopTimer();
+		timeleft = seconds;
+		drawingTimer = setInterval( timerTick, 1000 );		
+		++timeleft;
+		timerTick();
+	}
+	
+	function stopTimer() {
+		if (drawingTimer != null) {
+			clearInterval(drawingTimer);
+			drawingTimer = null;
+		}
+	}
+	
 	socket.on('startRound', function(msg) {
-		timeleft = msg.time;
 		setHint(msg.hint);
+		roundRunning = true;
 		
 		if(!myturn) {
-			status.text(msg.nick + ' is drawing right now!');
+			status.text(msg.nick + ' is drawing!');
 		}
 		else {
 			readytodraw.prop('value', 'Pass (' + timeleft + ')');
 		}
 		console.log("startRound; myTurn=" + myturn);
-		
-		drawingTimer = setInterval( timerTick, 1000 );		
-		++timeleft;
-		timerTick();
+
+		startTimer(msg.time);
 		
 		chatcontent.append('<p>&raquo; <span style="color:' + msg.color + '">' + msg.nick + '</span> is drawing!</p>');
 		chatScrollDown();
@@ -319,6 +333,9 @@ $(document).ready(function() {
 	socket.on('endRound', function(msg) { 
 		var message;
 		play(sndEndRound);
+		roundRunning = false;
+		
+		// add chat message
 		if (msg.isPass) {
 			message = 'Player passed';
 		}
@@ -330,16 +347,19 @@ $(document).ready(function() {
 		}
 		chatcontent.append('<p>&raquo; ' + message + '. The word was <strong>' + msg.word + '</strong>.</p>');
 		chatScrollDown();
+		
 		console.log("endRound");
-		if (drawingTimer != null) {
-			clearInterval(drawingTimer);
-			drawingTimer = null;
-		}
+		stopTimer();
 		myturn = false;
 		$('#game').removeClass('drawing');
 		$('#game').removeClass('guessedIt');
 		selectedcolor.spectrum('set', '#000');
 		$lineWidth.val(2);
+		
+		if (msg.timeUntilNextRound) {
+			status.text(msg.nextPlayer.nick + ' is up next!');
+			startTimer(msg.timeUntilNextRound);
+		}
 	});
 	
 	socket.on('youCanDraw', function(msg) {
@@ -373,18 +393,23 @@ $(document).ready(function() {
 	function timerTick() {
 		if(timeleft && timeleft > 0) {
 			timeleft--;
-			if (myturn) {
-				readytodraw.prop('value', 'Pass');
-				readytodraw.attr("disabled", false);
+			if (roundRunning) {
+				if (myturn) {
+					readytodraw.prop('value', 'Pass');
+					readytodraw.attr("disabled", false);
+				}
+				else {
+					readytodraw.prop('value', 'Guess!');
+					readytodraw.attr("disabled", true);
+				}
 			}
 			else {
-				readytodraw.prop('value', 'Guess!');
+				readytodraw.prop('value', 'Wait!');
 				readytodraw.attr("disabled", true);
 			}
 			$timer.text(timeleft);
 		} else {
-			clearInterval(drawingTimer);
-			drawingTimer = null;
+			stopTimer();
 			readytodraw.prop('value', 'Ready to draw!');
 		}
 	}
