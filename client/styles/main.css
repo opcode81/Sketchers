@@ -8,6 +8,8 @@ body
 	background: white;
 	font-family: Calibri, Segoe UI, Tahoma;
 	font-size:12px;
+	margin:0;
+	padding:0;
 }
 
 .ellipsis {
@@ -56,19 +58,32 @@ button:hover, input[type=button]:hover {
 	opacity: 0.8;
 }
 
-#centeringContainer {
-	width:100%;
-    text-align:center;
-}
-
 #main {
 	background:#A96A6A;
 	border-radius: 5px;
 	padding: 20px;
-	display: inline-block;
-	margin: 30px;
 	box-shadow: 5px 5px 5px #ccc;
 	text-align: left;
+}
+
+/* centre horizontally */
+#centeringContainer {
+	width:100%;
+    text-align:center;
+}
+#main {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+/* centre vertically */
+html, body, #centeringContainer {
+	height: 100%;
+}
+#main {
+	position: relative;
+	top: 50%;
+	transform: translateY(-50%);
 }
 
 #status
