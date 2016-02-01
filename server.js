@@ -206,6 +206,8 @@ io.sockets.on('connection', function (socket) {
 		}
 		if (myNick == '')
 			return;
+		if (msg.color)
+			myColor = msg.color;
 		
 		// add user
 		var user = { id: socket.id, nick: myNick, color: myColor, score: myScore, guessedCorrectly:false, isCurrent:false };

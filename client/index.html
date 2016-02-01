@@ -16,7 +16,9 @@
 			<img src="title.png" style="margin-bottom:20px;">
 			<div id="initial" style="color:white; font-size:15px;">Connecting...</div>
 			<div id="join" style="display:none; color:white; font-size:15px;">
-				User name: &nbsp;<input id="joinNick" type="text" maxlength="30">&nbsp;&nbsp;<button id="joinButton" value="Join"> Join Game </button>
+				User name: &nbsp;<input id="joinNick" type="text" maxlength="30">&nbsp;
+				<button id="changeColourButton">Change colour</button>
+				<button id="joinButton" value="Join"> Join Game </button>
 			</div>
 			<div id="game" style="display:none;">	
 				<div id="panels">
@@ -56,7 +58,7 @@
 							</tr>
 						</table>						
 						<div style="display:none"><input type="text" id="chatnick" disabled="disabled" value="" maxlength="32" placeholder="Change nickname" /></div>
-						<div></div><input type="button" id="changenickcolor" value="Change user color" /></div>
+						<div></div><input type="button" id="changenickcolor" style="display:none" value="Change user color" /></div>
 					</div>
 				</div>
 			</div>
