@@ -334,6 +334,7 @@ $(document).ready(function() {
 		var message;
 		play(sndEndRound);
 		roundRunning = false;
+		setHint(msg.word);
 		
 		// add chat message
 		if (msg.isPass) {
