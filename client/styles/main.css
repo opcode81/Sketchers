@@ -2,15 +2,59 @@
 /* General */
 /* ---------- */
 
+@import url('http://fonts.googleapis.com/css?family=Open+Sans');
+
 body
 {
-	background:white;
-	font-family:Calibri,Tahoma;
+	background: white;
+	font-family: Open Sans, Segoe UI, Calibri, Tahoma;
 	font-size:12px;
 }
 
-input, button {
-	border-radius:5px;
+.ellipsis {
+	white-space: nowrap;
+  	overflow: hidden;
+  	text-overflow: ellipsis;
+}
+
+input:focus, button:focus {
+	outline: none;
+}
+
+/* border radius */
+button, input, .sp-replacer, #people, #canvasframe, #chatcontent {
+	border-radius: 3px;
+}
+
+button, input {
+  font-size: 11px;
+}
+
+input[type=text] {
+	height:20px;
+	border: 0;
+	padding: 0;
+	padding-left: 3px;
+}
+
+button, input[type=button] {
+  color: black;
+  border: 0 none;
+  height: 20px;
+  padding: 0px 12px;
+  margin: 0;
+  background:white;
+  
+  cursor: pointer;
+  display: inline-block;
+  
+  text-transform: none;
+  
+  transition: all 80ms ease-in-out;
+}
+
+button:hover, input[type=button]:hover {
+	opacity: 0.8;
 }
 
 #main
@@ -20,7 +64,7 @@ input, button {
 	padding: 20px;
 	display: inline-block;
 	margin: 30px;
-	box-shadow: 5px 5px 5px #ccc
+	box-shadow: 5px 5px 5px #ccc;
 }
 
 #status
@@ -54,6 +98,9 @@ input, button {
 	display:table;
 }
 
+#lineWidth {
+	height: 12px;
+}
 
 /* ---------------------- */
 /* first panel section */
@@ -69,7 +116,6 @@ input, button {
 #people
 {
 	background:#fff;
-	border-radius:5px;
 	border:1px solid #ccc;
 	width:180px;
 	max-height:340px;
@@ -87,9 +133,24 @@ input, button {
 	margin-bottom:5px;
 }
 
-#clearcanvas
-{
-	padding:5px;
+#timer {
+	font-weight: bold;
+	font-size: 40pt;
+	color: white;
+	text-align: center;
+}
+
+table.users td.score {
+	text-align:right;
+	padding-right:5px;
+}
+
+table.users td.username > div {
+	max-width: 100px;
+}
+
+table.users td.scoreRound {
+	padding-left: 8px;
 }
 
 /* -------------------------- */
@@ -106,7 +167,6 @@ input, button {
 #canvasframe {
 	width:500px;
 	height:500px;
-	border-radius:5px;
 	border:4px solid #ccc;
 }
 
@@ -121,11 +181,47 @@ input, button {
 }
 
 #game.drawing #canvasframe {
-	border-color: #2875AB;
+	/*border-color: #6aa96a;*/
+	border-color: #6a8aa9;
 }
 
 #game.guessedIt #canvasframe {
-	border-color: yellow;
+	border-color: #6aa98a;
+}
+
+#clearcanvas {
+}
+
+#game #drawingControls {
+	display:none;
+}
+
+#game.drawing #drawingControls {
+	display:block;
+}
+
+#hint {
+	margin-bottom: 10px;
+	font-family: Courier New, fixed-width;
+	font-weight: normal;
+	font-size: 18px;
+	text-align: center;
+	width: 100%;
+	color: white;
+}
+
+/* colour picker overrides */
+
+.sp-replacer {
+	border: none;
+	height: 14px;
+	padding: 3px;
+}
+
+.sp-preview {
+	height: 14px;
+	margin-right: 2px;
+	border: none;
 }
 
 /* ---------------------- */
@@ -143,10 +239,8 @@ input, button {
 #chatcontent
 {
 	background:#fff;
-	border-radius:5px;
 	border:1px solid #ccc;
-	width:300px;
-	height:450px;
+	height:496px;
 	overflow: auto;
 	overflow-x: hidden;
 	padding-top:5px;
@@ -169,21 +263,13 @@ input, button {
 	width:150px;
 }
 
-#chatinput
-{
-	border:1px solid #ccc;
-	margin-top:10px;
+#chatinput {
+	width: 100%;
 	margin-left:0px;
-	padding:5px;
-	width:200px;
-	float:left;
 }
 
 #clearchat {
-	width:90px;
 	margin-left:10px;
-	height:27px;
-	margin-top:-4px;
 }
 
 #readytodraw {
@@ -196,50 +282,5 @@ input, button {
 #readytodraw
 {
 	margin-top:10px;
-	padding:5px;
-}
-
-#timer {
-	font-weight: bold;
-	font-size: 40pt;
-	color: white;
-	text-align: center;
-}
-
-#hint {
-	margin-bottom: 10px;
-	font-family: Courier New, fixed-width;
-	font-weight: normal;
-	font-size: 18px;
-	text-align: center;
-	width: 100%;
-	color: white;
-}
-
-.ellipsis {
-	white-space: nowrap;
-  	overflow: hidden;
-  	text-overflow: ellipsis;
-}
-
-table.users td.score {
-	text-align:right;
-	padding-right:5px;
-}
-
-table.users td.username > div {
-	max-width: 100px;
-}
-
-table.users td.scoreRound {
-	padding-left: 8px;
-}
-
-#game #drawingControls {
-	display:none;
-}
-
-#game.drawing #drawingControls {
-	display:block;
 }
 

@@ -34,7 +34,7 @@ $(document).ready(function() {
 	socket.on('joined', function() {
 		$('#join').hide();
 		$('#game').show();
-		status.text('Click Ready to draw! button to start drawing');
+		status.text('Click "Ready to draw!" to start this round.');
 		chatinput.removeProp('disabled');
 		chatnick.removeProp('disabled');
 		chatinput.focus();

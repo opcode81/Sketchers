@@ -3,8 +3,8 @@
 	<head>
 		<meta charset="utf-8">
 		<title>Sketchers</title>
-		<link rel="stylesheet" type="text/css" href="styles/main.css" />
 		<link rel="stylesheet" type="text/css" href="styles/spectrum.css" />
+		<link rel="stylesheet" type="text/css" href="styles/main.css" />		
 		<script type="text/javascript" src="scripts/socket.io.js"></script>
 		<script type="text/javascript" src="scripts/jquery-1.7.2.min.js"></script>
 		<script type="text/javascript" src="scripts/client.js"></script>
@@ -26,12 +26,12 @@
 						<div id="status">Status: offline</div>
 					</div>
 					<div id="secondpanel">
-						<div id="hint"></div>		
+						<div id="hint">L O B B Y</div>		
 						<div id="canvasframe">		
 							<canvas id="canvas" width="500" height="500"></canvas>
 						</div>
 						<div id="drawingControls" style="margin-top:10px">
-							<table style="width:100%">
+							<table style="width:100%" cellspacing="0" cellpadding="0">
 							<tr>
 								<td style="width:60px;">
 									<input id="colour" type='text'>
@@ -48,9 +48,12 @@
 					</div>
 					<div id="thirdpanel">
 						<div id="chatcontent"></div>
-						<input type="text" id="chatinput" disabled="disabled" maxlength="256" placeholder="Guess/chat message" /><br/>
-						<input type="button" id="clearchat" value="Clear chat" />
-						
+						<table style="width:100%; margin-top:10px;" cellspacing="0" cellpadding="0">
+							<tr>
+								<td><input type="text" id="chatinput" disabled="disabled" maxlength="256" placeholder="Guess/chat message" /></td>
+								<td style="width:84px;"><input type="button" id="clearchat" value="Clear chat" /></td>
+							</tr>
+						</table>						
 						<div style="display:none"><input type="text" id="chatnick" disabled="disabled" value="" maxlength="32" placeholder="Change nickname" /></div>
 						<div></div><input type="button" id="changenickcolor" value="Change user color" /></div>
 					</div>
