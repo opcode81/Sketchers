@@ -7,6 +7,15 @@ $(document).ready(function() {
 		chatnick = $('#chatnick'),
 		$joinButton = $('#joinButton');
 	
+	var sndEndRound = new Audio('sounds/endRound.ogg'),
+		sndStartYourTurn = new Audio("sounds/startYourTurn.ogg"),
+		sndGuessedIt = new Audio("sounds/guessedIt.ogg");
+	
+	var play = function(snd) {
+		snd.currentTime=0;
+		snd.play();
+	};
+	
 	// initialise colour picker
 	$('#colour').spectrum({
 		color: '#000',
@@ -284,6 +293,7 @@ $(document).ready(function() {
 		myword = word;
 		status.html('Your word is<br><b style="font-size:130%">' + myword[0] + '</b><br>(difficulty: ' + myword[1] + ')');
 		$('#game').addClass('drawing');
+		play(sndStartYourTurn);
 	});
 	
 	socket.on('startRound', function(msg) {
@@ -308,6 +318,7 @@ $(document).ready(function() {
 	
 	socket.on('endRound', function(msg) { 
 		var message;
+		play(sndEndRound);
 		if (msg.isPass) {
 			message = 'Player passed';
 		}
@@ -346,6 +357,7 @@ $(document).ready(function() {
 	
 	socket.on('youGuessedIt', function(msg) {
 		$('#game').addClass('guessedIt');
+		play(sndGuessedIt);
 	});
 	
 	var formatUser = function(data) {
