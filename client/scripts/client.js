@@ -243,7 +243,7 @@ $(document).ready(function() {
 	});
 	
 	var drawWithEvent = function(canvas, e) {
-		var newpoint = { x: e.pageX - canvas.offsetLeft, y: e.pageY - canvas.offsetTop};
+		var newpoint = { x: e.offsetX, y: e.offsetY};
 		line = { from: lastpoint, to: newpoint, color: selectedcolor.spectrum('get').toHexString(), width: $lineWidth.val() };
 		draw(line);
 		lastpoint = newpoint;
