@@ -2,12 +2,10 @@
 /* General */
 /* ---------- */
 
-@import url('http://fonts.googleapis.com/css?family=Open+Sans');
-
 body
 {
 	background: white;
-	font-family: Open Sans, Segoe UI, Calibri, Tahoma;
+	font-family: Calibri, Segoe UI, Tahoma;
 	font-size:12px;
 }
 
