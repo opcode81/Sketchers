@@ -212,11 +212,11 @@ table.users td.scoreRound {
 }
 
 #game #drawingControls {
-	display:none;
+	visibility:hidden;
 }
 
 #game.drawing #drawingControls {
-	display:block;
+	visibility:visible;
 }
 
 #hint {
