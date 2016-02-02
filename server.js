@@ -80,7 +80,7 @@ var scoreByRemainingTime = true; // if false, score constant
 var autoSelectNextPlayer = true; // if false, players must manually select the next player
 var maxHints = 4;
 var maxHintFraction = 0.40;
-var timeBetweenRounds = 5;
+var timeBetweenRounds = 7; // seconds
 
 function shuffle(array) {
 	  var currentIndex = array.length, temporaryValue, randomIndex;
