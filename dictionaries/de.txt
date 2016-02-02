@@ -49,8 +49,7 @@ Asteroid,2,1
 Atlantis,3,0
 Sturm,2,1
 Dachboden,2,0
-zielgruppe,3,0
-autobots,3,1
+Zielgruppe,3,0
 Benutzerbild,2,1
 Rächer,3,1
 Avocado,2,1
@@ -199,7 +198,6 @@ Kamel,1,0
 Kamera,1,1
 Lagerfeuer,2,1
 Camping,3,0
-lassen,1,0
 Kanada,2,1
 Kerze,1,1
 Süßigkeiten,2,1
@@ -259,7 +257,7 @@ Kreis,1,0
 Zirkus,2,1
 Ort,2,0
 Venusmuschel,1,1
-klatschen,2,0
+Applaus,2,0
 Klasse,2,0
 Klaue,1,0
 Lehm,2,1
@@ -278,7 +276,7 @@ Kokon,3,0
 Kaffee,1,1
 Sarg,2,1
 Münze,1,0
-kalt,2,0
+Kälte,2,0
 Collar,2,0
 College,2,1
 Kamm,1,0
@@ -381,7 +379,6 @@ Punkt,3,0
 Taube,2,0
 Dracula,3,1
 Drachen,1,1
-ablassen,2,0
 Vorhang,3,0
 Unentschieden,2,0
 Schublade,2,0
@@ -595,7 +592,7 @@ Haargel,3,0
 Heiligenschein,1,1
 Schinken,2,0
 Hambone,2,0
-hammer,1,1
+Hammer,1,1
 Hängematte,1,1
 Zwerghamster,2,1
 Hand,1,1
@@ -687,7 +684,6 @@ Krug,1,0
 Speerwurf,3,1
 Kiefer,1,0
 Rachen,2,0
-jayleno,2,1
 Jayz,3,0
 Jazz,3,0
 Jeans,2,0
@@ -945,8 +941,7 @@ Notausgang,2,0
 Olympische Spiele,3,1
 Omelette,3,0
 Zwiebel,2,0
-online,2,0
-offen,1,0
+Internet,2,0
 Oper,2,0
 Orange,2,1
 Orbit,3,0
@@ -1344,7 +1339,7 @@ Diebstahl,2,1
 Dampf,2,0
 Gefälle,2,0
 Schritt,2,0
-Stereo,2,0
+Stereoanlage,2,0
 Heck,3,0
 Stelzen,1,1
 Stachel,2,0
