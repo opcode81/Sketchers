@@ -915,7 +915,7 @@ Norden,2,0
 Norwegen,3,1
 Nase,1,1
 Nasenhaar,1,1
-Nosenring,1,1
+Nasenring,1,1
 Nasenloch,2,0
 Notizbuch,2,0
 Notizblock,2,1
@@ -1026,8 +1026,7 @@ Pille,1,1
 Kissen,1,1
 Pilot,2,0
 Pickel,2,0
-Kienappel,3,0
-Pinetree,3,0
+Pinie,3,0
 Pingpong,3,0
 Pink,3,1
 Pinky,1,1
@@ -1061,7 +1060,6 @@ Pony,1,0
 Pferdeschwanz,1,1
 Pudel,2,1
 Pool,1,1
-Poop,2,1
 Popcorn,1,1
 Eis am Stiel,2,1
 Schweinefleisch,2,0
@@ -1132,7 +1130,6 @@ Rippen,2,1
 Reis,2,0
 Fahrt,1,0
 Gewehr,2,0
-Rihanna,3,1
 Rand,2,0
 Ring,1,1
 Klingelton,3,1
