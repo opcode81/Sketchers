@@ -128,7 +128,7 @@ html, body, #centeringContainer {
 #firstpanel
 {
 	display: table-cell;
-	width:190px;
+	width:210px;
 	vertical-align:top;
 }
 
@@ -136,7 +136,7 @@ html, body, #centeringContainer {
 {
 	background:#fff;
 	border:1px solid #ccc;
-	width:180px;
+	width:200px;
 	max-height:340px;
 	overflow: auto;
 	overflow-x: hidden;
