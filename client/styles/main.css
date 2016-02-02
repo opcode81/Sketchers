@@ -59,7 +59,7 @@ button:hover, input[type=button]:hover {
 }
 
 #main {
-	background:#A96A6A;
+	background: #71b07f;
 	border-radius: 5px;
 	padding: 20px;
 	box-shadow: 5px 5px 5px #ccc;
@@ -200,12 +200,11 @@ table.users td.scoreRound {
 }
 
 #game.drawing #canvasframe {
-	/*border-color: #6aa96a;*/
-	border-color: #6a8aa9;
+	border-color: #2970ae;
 }
 
 #game.guessedIt #canvasframe {
-	border-color: #6aa98a;
+	border-color: #ffff70;
 }
 
 #clearcanvas {

@@ -14,3 +14,6 @@ results
 
 node_modules
 npm-debug.log
+
+resources/title.png
+resources/title-cnm.*
