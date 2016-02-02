@@ -98,7 +98,6 @@ Bohnen,2,0
 Bär,1,1
 Bart,2,1
 Beatles,3,1
-Beckham,3,1
 Bett,1,1
 Biene,1,1
 Rindfleisch,3,0
@@ -988,9 +987,7 @@ Passwort,3,1
 Flicken,2,0
 Pfad,2,0
 Patrioten,2,1
-paulyd,3,1
 Pfote,1,1
-pdiddy,3,1
 Frieden,1,1
 Pfirsich,2,0
 Pfirsiche,3,0
@@ -998,7 +995,7 @@ Pfau,3,1
 Erdnuss,2,1
 Erbse,1,1
 Pedal,2,0
-pinkeln,1,1
+Urin,1,1
 Pegasus,3,1
 Stift,1,1
 Bleistift,1,1
@@ -1029,7 +1026,6 @@ Pille,1,1
 Kissen,1,1
 Pilot,2,0
 Pickel,2,0
-pin,2,0
 Kienappel,3,0
 Pinetree,3,0
 Pingpong,3,0
@@ -1079,7 +1075,6 @@ Beutel,2,0
 Heckenrose,2,0
 Gebet,2,0
 Schwangerschaft,3,1
-hübsch,2,0
 Breze,3,1
 Preisschild,2,0
 Prinz,2,0
@@ -1090,7 +1085,6 @@ Gefängnis,2,0
 Prius,3,0
 Pfützen,3,0
 Kotzen,2,0
-ziehen,2,0
 Kürbis,2,1
 Marionette,2,1
 Hündchen,2,1
@@ -1510,7 +1504,6 @@ Twist,3,1
 Twitter,2,1
 Euter,1,1
 UFO,1,1
-hässlich,3,0
 Ukulele,2,1
 Regenschirm,1,1
 Monobraue,2,1
@@ -1626,7 +1619,6 @@ Gewinner,2,0
 Winter,2,0
 Draht,1,0
 WLAN,2,1
-weise,3,0
 Hexe,2,1
 Zeuge,3,0
 Assistent,2,1
@@ -1652,7 +1644,7 @@ Schreiben,3,0
 Kopierer,3,0
 Röntgen,2,1
 Yacht,2,0
-Yahtzee,3,0
+Poker,3,0
 Flohmarkt,3,0
 Garn,1,1
 Gähnen,2,0
@@ -1752,3 +1744,5 @@ Berlin,2,0
 München,2,0
 Köln,3,0
 Rom,3,0
+Stecknadel,1,0
+Reißzwecke,3,0
