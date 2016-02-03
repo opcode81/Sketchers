@@ -274,7 +274,8 @@ io.sockets.on('connection', function (socket) {
 						else
 							points = 10;
 						users[i].score += points;
-						users[i].scoreCurrentRound = points;
+						if (!users[i].scoreCurrentRound) users[i].scoreCurrentRound = 0;
+						users[i].scoreCurrentRound += points;
 						pointsAwarded.push([users[i], points]);
 					}
 				}
