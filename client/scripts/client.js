@@ -58,7 +58,8 @@ $(document).ready(function() {
 	
 	var sndEndRound = new Audio('sounds/endRound.ogg'),
 		sndStartYourTurn = new Audio("sounds/startYourTurn.ogg"),
-		sndGuessedIt = new Audio("sounds/guessedIt.ogg");
+		sndGuessedIt = new Audio("sounds/guessedIt.ogg"),
+		sndOtherGuessedIt = new Audio("sounds/otherGuessedIt.ogg");
 	
 	var play = function(snd) {
 		snd.currentTime=0;
@@ -91,9 +92,11 @@ $(document).ready(function() {
 	};
 	$changeColourButton.click(setRandomUserColour);
 	setRandomUserColour();
+	var myNick;
 	
 	$joinButton.click(function() {
-		socket.emit('join', { nick: $('#joinNick').val(), color: $userNameInput.css('color')});
+		myNick = $('#joinNick').val();
+		socket.emit('join', { nick: myNick, color: $userNameInput.css('color')});
 	});
 	
 	socket.on('joined', function() {
@@ -445,6 +448,9 @@ $(document).ready(function() {
 		var message = '<p>&raquo; ' + formatUser(msg) + ' guessed the word after ' + msg.timePassedSecs + ' s.</p>';
 		chatcontent.append(message);
 		chatScrollDown();
+		if (msg.nick != myNick) {
+			play(sndOtherGuessedIt);
+		}
 	});
 		
 	function timerTick() {
