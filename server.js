@@ -72,6 +72,7 @@ var roundStartTime;
 var playerIndicesGuessedCorrectly;
 var socketsById = {}, usersById = {};
 var currentHint, numCurrentHintsProvided;
+var disconnectedUserScores = {};
 
 // game mode
 var roundTime = 120, roundNo = 0;
@@ -148,6 +149,10 @@ io.sockets.on('connection', function (socket) {
 		
 		currentPlayer = playerId;
 		var user = usersById[playerId];
+		if (!user) {
+			console.error('Found no user for id ' + playerId);
+			return;
+		}
 		
 		canvas.splice(0, canvas.length);
 		io.sockets.emit('clearCanvas');
@@ -200,7 +205,6 @@ io.sockets.on('connection', function (socket) {
 	}
 	
 	socket.on('join', function(msg) {
-		console.log('Player joined: nick=' + msg.nick);
 		if (msg.nick) {
 			myNick = sanitizer.sanitize(msg.nick);
 		}
@@ -209,10 +213,20 @@ io.sockets.on('connection', function (socket) {
 		if (msg.color)
 			myColor = msg.color;
 		
+		if (usersById[socket.id]) {
+			console.log('Duplicate join attempted by ' + usersById[socket.id].nick);
+			return;
+		}
+		
 		// add user
+		if (disconnectedUserScores[myNick]) {
+			myScore = disconnectedUserScores[myNick];
+			delete disconnectedUserScores[myNick];
+		}
 		var user = { id: socket.id, nick: myNick, color: myColor, score: myScore, guessedCorrectly:false, isCurrent:false };
 		users.push(user);
 		usersById[socket.id] = user;
+		console.log('Player joined: id=' + socket.id + ', nick=' + msg.nick + ', users.length=' + users.length);
 		socket.emit('joined');
 		io.sockets.emit('userJoined', { nick: myNick, color: myColor });
 		emitUsers();
@@ -318,23 +332,19 @@ io.sockets.on('connection', function (socket) {
 	});
 	
 	socket.on('disconnect', function () {
-		console.log('user disconnected: ' + socket.id);
-		io.sockets.emit('userLeft', { nick: myNick, color: myColor });
-		for(var i = 0; i<users.length; i++) {
-			if(users[i].id == socket.id) {
-				users.splice(i,1);
-				socketsById[socket.id] = undefined;
-				break;
+		console.log('socket disconnected: ' + socket.id);
+		delete socketsById[socket.id];
+		var user = usersById[socket.id];
+		if (user) {
+			console.log('user disconnected: nick=' + user.nick);
+			disconnectedUserScores[user.nick] = user.score;
+			delete usersById[socket.id];		
+			users.splice(users.indexOf(user), 1);
+			io.sockets.emit('userLeft', { nick: myNick, color: myColor });
+			emitUsers();
+			if(currentPlayer == socket.id) {
+				turnFinished();
 			}
-		}
-		
-		emitUsers();
-		
-		if(currentPlayer == socket.id) {
-			// turn off drawing timer
-			clearTimeout(drawingTimer);
-			clearInterval(hintIntervalId);
-			turnFinished();
 		}
 	});
 	
@@ -379,6 +389,7 @@ io.sockets.on('connection', function (socket) {
 	}
 	
 	socket.on('readyToDraw', function () {
+		console.log('ready: id=' + socket.id);
 		if (!currentPlayer) { // new round triggered
 			console.log('ready: player ' + socket.id);
 			startTurn(socket.id);

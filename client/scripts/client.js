@@ -48,6 +48,10 @@ function randomUserColour() {
 $(document).ready(function() {
 	var socket = io.connect('/');
 	
+	$(window).on('beforeunload', function(){
+	    socket.close();
+	});
+	
 	var status = $('#status'),
 		people = $('#people'),
 		chatinput = $('#chatinput'),
@@ -84,6 +88,7 @@ $(document).ready(function() {
 	socket.on('connect', function () {
 		$("#initial").hide();
 		$("#join").show();
+		$("#game").hide();
 	});
 	
 	var setRandomUserColour = function() {
