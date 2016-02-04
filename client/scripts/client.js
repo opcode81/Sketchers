@@ -376,7 +376,7 @@ $(document).ready(function() {
 		roundRunning = true;
 		
 		if(!myturn) {
-			status.text(msg.nick + ' is drawing!');
+			status.html(msg.nick + ' is drawing!');
 		}
 		else {
 			readytodraw.prop('value', 'Pass (' + timeleft + ')');
@@ -417,7 +417,7 @@ $(document).ready(function() {
 		$lineWidth.val(2);
 		
 		if (msg.timeUntilNextRound) {
-			status.text(msg.nextPlayer.nick + ' is up next!');
+			status.html(msg.nextPlayer.nick + ' is up next!');
 			startTimer(msg.timeUntilNextRound);
 		}
 	});
