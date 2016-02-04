@@ -1093,8 +1093,8 @@ Puzzle,2,1
 Pyramide,2,1
 Quacksalber,3,0
 Viertel,2,1
-Queen,2,1
-Ruhig,3,0
+Königin,2,1
+Ruhe,3,0
 Quilt,2,0
 Kaninchen,2,1
 Waschbär,2,1
@@ -1141,7 +1141,7 @@ Räuber,2,0
 Robe,2,0
 Roboter,1,1
 Felsen,1,0
-Rocket,2,1
+Rucola,2,1
 Rockstar,3,0
 Rolle,2,0
 Dach,2,0
@@ -1260,8 +1260,8 @@ Hausschuhe,2,1
 Steigung,2,0
 Geruch,2,0
 Lächeln,1,1
-Nebligen,2,0
-Rauchen,2,0
+Rauch,2,0
+Raucher,2,0
 Smoothie,3,0
 Schnecke,1,1
 Schlange,1,1
