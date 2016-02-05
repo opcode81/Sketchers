@@ -69,7 +69,6 @@ var dictionary, currentWord = null, currentPlayer = null;
 var drawingTimer = null, hintIntervalId = null;
 var playerUID = 1;
 var roundStartTime;
-var playerIndicesGuessedCorrectly;
 var socketsById = {}, usersById = {};
 var currentHint, numCurrentHintsProvided;
 var disconnectedUserScores = {};
@@ -196,8 +195,6 @@ io.sockets.on('connection', function (socket) {
 		io.sockets.emit('startRound', { color: user.color, nick: user.nick, time:roundTime, hint:currentHint });
 		emitUsers();
 		
-		playerIndicesGuessedCorrectly = [];
-		
 		// set the timers for this round
 		drawingTimer = setTimeout(turnFinished, roundTime * 1000);
 		hintIntervalId = setInterval(provideHint, hintInterval);
@@ -242,6 +239,15 @@ io.sockets.on('connection', function (socket) {
 		}
 	});
 	
+	var checkForEndOfRound = function() {
+		var doneUsers = users.filter(function(u) { return u.guessedCorrectly; });
+		var numGuessed = doneUsers.length;
+		var allGuessed = numGuessed == users.length-1; 
+		if ((numGuessed > 0 && correctGuessEndsTurn) || allGuessed) {
+			turnFinished(false, allGuessed);
+		}
+	};
+	
 	socket.on('message', function (msg) {
 		var sanitizedMsg = sanitizer.sanitize(msg.text);
 		if(sanitizedMsg != msg.text) {
@@ -256,43 +262,37 @@ io.sockets.on('connection', function (socket) {
 		if (!isCorrectGuess)
 			io.sockets.emit('message', { text: sanitizedMsg, color: myColor, nick: myNick });
 		
-		// check if current word was guessed (and not previously guessed by the same player)
-		if (currentPlayer != null) {
-			var previouslyGuessed = playerIndicesGuessedCorrectly.indexOf(socket.id) >= 0;
-			if(currentPlayer != socket.id && isCorrectGuess && !previouslyGuessed) {
-				playerIndicesGuessedCorrectly.push(socket.id);
-				
+		// check if current word was guessed by a player who isn't the drawing player while the round is active
+		if (isCorrectGuess && currentPlayer != null && currentPlayer != socket.id) {
+			var user = usersById[socket.id];
+			// ... and the user did not previously guess the word
+			if(user && !user.guessedCorrectly) {
 				var timePassed = new Date().getTime() - roundStartTime;
 				var timePassedSecs = Math.floor(timePassed / 1000);
 				var timeRemainingSecs = roundTime - timePassedSecs;
 				
-				// add scores to guesser and drawer
+				// award points
 				var pointsAwarded = [];
-				for(var i = 0; i<users.length; i++) {
-					if(users[i].id == socket.id) { // guessing player
-						var points; 
-						if (scoreByRemainingTime) 
-							points = timeRemainingSecs;
-						else
-							points = 10;
-						users[i].score += points;
-						users[i].scoreCurrentRound = points;
-						users[i].guessedCorrectly = true;
-						pointsAwarded.push([users[i], points]);
-					}
-					else if (users[i].id == currentPlayer) { // drawing player
-						drawingPlayerIndex = i;
-						var points;
-						if (scoreByRemainingTime)
-							points = Math.floor(timeRemainingSecs / (users.length-1));
-						else
-							points = 10;
-						users[i].score += points;
-						if (!users[i].scoreCurrentRound) users[i].scoreCurrentRound = 0;
-						users[i].scoreCurrentRound += points;
-						pointsAwarded.push([users[i], points]);
-					}
-				}
+				// * guessing player
+				var points; 
+				if (scoreByRemainingTime) 
+					points = timeRemainingSecs;
+				else
+					points = 10;
+				user.score += points;
+				user.scoreCurrentRound = points;
+				user.guessedCorrectly = true;
+				pointsAwarded.push([user, points]);
+				// * drawing player
+				var drawingUser = usersById[currentPlayer];
+				if (scoreByRemainingTime)
+					points = Math.floor(timeRemainingSecs / (users.length-1));
+				else
+					points = 10;
+				drawingUser.score += points;
+				if (!drawingUser.scoreCurrentRound) drawingUser.scoreCurrentRound = 0;
+				drawingUser.scoreCurrentRound += points;
+				pointsAwarded.push([drawingUser, points]);
 				
 				io.sockets.emit('wordGuessed', { timePassedSecs: timePassedSecs, color: myColor, nick: myNick, points: pointsAwarded });
 				socket.emit('youGuessedIt');
@@ -300,11 +300,7 @@ io.sockets.on('connection', function (socket) {
 				// communicate new scores
 				emitUsers();
 				
-				var allGuessed = playerIndicesGuessedCorrectly.length == users.length-1;
-				
-				if (correctGuessEndsTurn || allGuessed) {
-					turnFinished(false, allGuessed);
-				}
+				checkForEndOfRound();
 			}
 		}
 	});
@@ -344,6 +340,9 @@ io.sockets.on('connection', function (socket) {
 			emitUsers();
 			if(currentPlayer == socket.id) {
 				turnFinished();
+			}
+			else {
+				checkForEndOfRound();
 			}
 		}
 	});
