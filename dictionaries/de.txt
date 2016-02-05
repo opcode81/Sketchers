@@ -30,7 +30,7 @@ Affe,1,0
 Apfel,1,1
 Apple,2,0
 Schürze,2,1
-Aquaman,3,1
+Wassermann,3,1
 Aquarium,2,1
 Arkade,2,1
 Bogenschießen,3,1
@@ -38,7 +38,7 @@ Arm,1,0
 Rüstung,2,0
 Achsel,2,1
 Armee,2,0
-Arnold,3,1
+Arnold Schwarzenegger,3,1
 Pfeil,1,0
 Kunst,3,0
 Künstler,2,1
@@ -133,7 +133,6 @@ Bücherschrank,3,0
 Lesezeichen,2,0
 Boombox,3,1
 Stiefel,1,1
-Stiefel,2,0
 Rahmen,3,0
 Flasche,1,1
 Spam,3,1
@@ -260,7 +259,7 @@ Applaus,2,0
 Klasse,2,0
 Klaue,1,0
 Lehm,2,1
-Kliff,2,0
+Klippe,2,0
 Aufstieg,2,0
 Uhr,2,1
 Kleiderschrank,2,0
@@ -277,7 +276,7 @@ Sarg,2,1
 Münze,1,0
 Kälte,2,0
 Collar,2,0
-College,2,1
+Universität,2,1
 Kamm,1,0
 Komet,2,1
 Comic,3,0
@@ -288,9 +287,8 @@ Kegel,1,1
 Kochen,1,0
 Plätzchen,2,1
 Keks,2,0
-Kork,1,0
+Korken,1,0
 Mais,1,1
-Corndog,2,1
 Ecke,1,0
 Sofa,2,0
 Gericht,3,0
@@ -315,7 +313,7 @@ Kristall,3,0
 Kuba,3,0
 Tasse,1,0
 Cupcake,1,1
-Cupid,2,1
+Amor,2,1
 Vorhang,2,0
 Kunde,3,0
 Schnitt,1,0
@@ -331,13 +329,12 @@ Deck,2,0
 Tiefe,2,0
 Hirsch,2,1
 Verteidiger,3,0
-Delta,2,1
+Flussdelta,2,1
 Zahnarzt,3,0
 Zahnersatz,2,1
 Wüste,2,0
 Schreibtisch,1,0
 Teufel,2,0
-Devo,2,1
 Diamant,1,1
 Windel,2,1
 Würfel,2,1
@@ -350,7 +347,7 @@ Direktor,3,1
 Schmutz,1,0
 Diskothek,2,0
 Krankheit,3,0
-Gerichte,2,0
+Gericht,2,0
 Diva,2,0
 Taucher,1,0
 Scheidung,3,0
@@ -360,7 +357,7 @@ DNA,2,0
 Dock,2,0
 Arzt,2,1
 Tier,1,1
-Katzenhai,2,1
+Weißer Hai,2,1
 Hundeschlitten,2,1
 Puppe,1,0
 Dollar,2,0
@@ -372,8 +369,7 @@ Tür,1,0
 Türklingel,3,0
 Türklinke,2,1
 Fußabtreter,3,0
-Türen,2,0
-Eingangsstufe,3,0
+Türschwelle,3,0
 Punkt,3,0
 Taube,2,0
 Dracula,3,1
@@ -386,7 +382,7 @@ Kleid,2,0
 Kommode,3,0
 Dribbling,2,1
 Bohrer,2,0
-Trinken,2,0
+Getränk,2,0
 Tropf,1,0
 Platte,2,0
 Trommel,1,0
@@ -406,7 +402,7 @@ Ohr,1,1
 Ohrenschützer,2,1
 Ohrring,2,1
 Erde,2,1
-Ohrenschmalz,3,0
+Ohrenschmalz,2,0
 Osten,1,1
 Ostern,3,1
 Essen,1,0
@@ -1017,7 +1013,7 @@ Klavier,1,1
 Essiggurke,2,0
 Picknick,2,1
 Bild,3,0
-Kuchendiagram,1,1
+Kuchendiagramm,1,1
 Kreisdiagramm,2,1
 Schwein,1,1
 Taube,2,0
@@ -1066,7 +1062,7 @@ Schweinefleisch,2,0
 Porsche,3,1
 Poseidon,2,1
 Postkarte,2,1
-Vereinsposter,2,0
+Poster,2,0
 Kanne,1,1
 Kartoffel,2,1
 Beutel,2,0
@@ -1082,7 +1078,6 @@ Prisma,2,1
 Gefängnis,2,0
 Prius,3,0
 Pfützen,3,0
-Kotzen,2,0
 Kürbis,2,1
 Marionette,2,1
 Hündchen,2,1
@@ -1295,7 +1290,7 @@ Soyasauce,3,0
 Spanien,3,0
 Funke,3,0
 Sprache,2,0
-Speaker,3,0
+Lautsprecher,2,0
 Speer,2,1
 Spinne,1,1
 Spritztour,2,0
@@ -1314,11 +1309,11 @@ Tintenfisch,2,1
 Eichhörnchen,3,1
 Stich,1,0
 Stadion,3,1
-Stuffe,2,0
+Bühne,2,0
 Fleck,2,0
 Treppen,2,1
 Stempel,2,1
-Hefter,3,0
+Hefter,2,0
 Stern,1,0
 Glotze,2,0
 Seestern,2,1
@@ -1346,6 +1341,7 @@ Strohmann,3,0
 Strom,3,0
 Straße,2,0
 String,2,0
+Schnur,2,0
 Streifen,2,0
 Kinderwagen,2,1
 False,3,0
@@ -1359,8 +1355,12 @@ Sonne,1,1
 Sonnencreme,3,0
 Sonnenbrand,3,0
 Sonnenuntergang,2,1
+Sonnenaufgang,2,1
 Sonnenschein,3,0
 Superman,1,1
+Spiderman,2,0
+Batman,2,0
+Indiana Jones,2,0
 Surfen,1,1
 Chirurg,3,0
 Überlebender,3,0
@@ -1379,7 +1379,6 @@ Schwert,1,1
 Sirup,2,0
 Tisch,2,1
 Taco,1,1
-Tacos,2,0
 Kaulquappe,1,1
 Schlagwort,1,0
 Schwanz,1,1
@@ -1387,7 +1386,7 @@ Taiwan,3,1
 Start,3,0
 Tango,2,0
 Panzer,1,1
-Klebeband,1,0
+Klebeband,2,0
 Ziel,2,0
 Tätowierung,2,1
 Taxi,1,1
@@ -1422,7 +1421,7 @@ Ticket,2,0
 Kitzeln,2,0
 Krawatte,1,1
 Tiger,1,1
-Kacheln,2,0
+Kachel,2,0
 Zeit,2,0
 Zeitbombe,2,1
 Zeitleiste,3,0
@@ -1478,8 +1477,6 @@ T-Shirt,2,1
 Tuba,1,1
 Dienstag,1,0
 Schlepper,3,0
-Schlepper,3,1
-Tumblr,3,1
 Bauch,2,1
 Thunfisch,1,1
 Melodie,3,0
@@ -1495,7 +1492,6 @@ Tweed,3,0
 Pinzette,3,0
 Zweig,1,0
 Dämmerung,3,1
-Twinkie,2,1
 Zwillinge,2,0
 Twist,3,1
 Twitter,2,1
@@ -1508,7 +1504,7 @@ Einhorn,1,1
 Einrad,2,1
 Union,3,0
 UNO,3,0
-Aufwärtshaken,2,1
+Stripper,2,1
 Uranus,3,0
 Seeigel,1,1
 USA,2,1
@@ -1545,15 +1541,16 @@ Vitamin,3,0
 Stimme,3,0
 Vulkan,2,1
 Umsatz,2,0
-Erbrochenem,2,1
+Erbrochenes,2,1
+Kotze,2,1
 Voodoo,2,0
 Vortex,3,0
 Abstimmung,2,0
 Waffel,2,1
 Waggon,2,1
 Taille,2,0
-Bedienung,2,0
-Kellnerin,3,0
+Bedienung,3,0
+Kellnerin,2,0
 Wecker,3,0
 Spaziergang,1,0
 Wand,1,0
@@ -1563,7 +1560,7 @@ Zauberstab,1,1
 Krieg,2,0
 Warcraft,3,1
 Kleiderschrank,3,0
-Warhol,2,1
+Andy Warhol,2,1
 Krieger,3,0
 Warze,3,0
 Wäsche,2,0
@@ -1581,7 +1578,6 @@ Hochzeitsfeier,3,1
 Keil,2,1
 Gras,1,0
 Woche,2,0
-Weinen,2,0
 Gewichte,3,0
 Werwolf,3,1
 Westen,1,0
