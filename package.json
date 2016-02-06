@@ -1,9 +1,8 @@
 {
-	"name": "Pictionary",
-	"version": "0.1.2",
-	"description": "Enjoyable Pictionary game working with Node.js and Socket.io",
-	"keywords": ["pictionary", "draw", "drawing", "game", "socket.io", "nodejs", "node.js"],
-	"author": "Dave Frassoni <me@davefrassoni.com> (http://davefrassoni.com/)",
+	"name": "Sketchers",
+	"version": "0.1.0",
+	"description": "An online multiplayer browser game where players guess words/terms based sketches drawn on a virtual whiteboard (similar to Pictionary, Activity and Montagsmaler) with over 1800 words in English and German.",
+	"keywords": ["drawing", "multiplayer", "game", "pictionary", "Montagsmaler"],
 	"dependencies": {
 		"socket.io": "0.9.5",
 		"sanitizer": ""
@@ -11,6 +10,6 @@
 	"engine": "node >= 0.4.7",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/davefrassoni/Pictionary.git"
+		"url": "https://github.com/opcode81/sketchers"
 	}
 }
