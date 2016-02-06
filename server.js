@@ -85,7 +85,7 @@ ConnectionManager.prototype.handleGameMessage = function(socket, messageId, data
 ConnectionManager.prototype.emit = function(socketId, messageId, data) {
 	var socket = this.socketsById[socketId];
 	if (!socket) 
-		console.error('unknown socket ' + socketId);
+		console.trace('unknown socket ' + socketId);
 	else
 		socket.emit(messageId, data);
 };
@@ -110,7 +110,7 @@ var Game = function() {
 Game.prototype.emit = function(userOrUserId, messageId, data) {
 	var user = typeof(userOrUserId) != 'object' ? this.usersById[userOrUserId] : userOrUserId;
 	if (!user)
-		console.error('emit: unknown user ' + userOrUserId);
+		console.trace('emit: unknown user ' + userOrUserId);
 	else {
 		connectionManager.emit(user.id, messageId, data);
 	}
@@ -125,7 +125,7 @@ Game.prototype.emitAll = function(messageId, data) {
 Game.prototype.handlerProxy = function(socket, messageId, data) {
 	var user = this.usersById[socket.id];
 	if (!user) {
-		console.error('user not in game: ' + socket.id);
+		console.log('user not in game: ' + socket.id);
 		return;
 	}
 	var handler = this[handlerName(messageId)];
@@ -333,11 +333,14 @@ Game.prototype.handleJoin = function(socket, msg) {
 };
 	
 Game.prototype.checkForEndOfRound = function() {
-	var doneUsers = this.users.filter(function(u) { return u.guessedCorrectly; });
-	var numGuessed = doneUsers.length;
-	var allGuessed = numGuessed == this.users.length-1; 
-	if ((numGuessed > 0 && correctGuessEndsTurn) || allGuessed) {
-		this.turnFinished(false, allGuessed);
+	if (this.currentPlayer) {
+		var doneUsers = this.users.filter(function(u) { return u.guessedCorrectly; });
+		var numGuessed = doneUsers.length;
+		var allGuessed = numGuessed == this.users.length-1; 
+		if ((numGuessed > 0 && correctGuessEndsTurn) || allGuessed) {
+			console.log('checkForEndOfRound: ending turn');
+			this.turnFinished(false, allGuessed);
+		}
 	}
 };
 	
@@ -411,6 +414,7 @@ Game.prototype.handleDisconnect = function(socket, user) {
 	this.emitAll('userLeft', { nick: user.nick, color: user.color });
 	this.emitUsers();
 	if(this.currentPlayer == user.id) {
+		console.log('disconnect: current player disconnected; ending turn');
 		this.turnFinished();
 	}
 	else {
@@ -437,10 +441,10 @@ Game.prototype.handleClearCanvas = function (socket, user) {
 Game.prototype.handleReadyToDraw = function(socket, user) {
 	console.log('ready: id=' + socket.id);
 	if (!this.currentPlayer) { // new round triggered
-		console.log('ready: player ' + socket.id);
+		console.log('ready: starting turn of ' + socket.id);
 		this.startTurn(socket.id);
 	} else if (this.currentPlayer == socket.id) { // pass
-		// turn off drawing timer
+		console.log('ready: player passed');
 		this.turnFinished(true);
 	}
 };
