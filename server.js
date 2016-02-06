@@ -425,7 +425,7 @@ Game.prototype.handleDraw = function (socket, user, line) {
 	}
 };
 	
-Game.prototype.handleClearCanvas = function () {
+Game.prototype.handleClearCanvas = function (socket, user) {
 	console.log('received clearCanvas');
 	if(this.currentPlayer == socket.id) {
 		console.log('clearCanvas from current player can be processed');
@@ -449,10 +449,12 @@ Game.prototype.turnFinished = function(opt_pass, opt_allGuessed) {
 	var self = this;
 	
 	console.log('turn finished: users.length=' + this.users.length);
-	var drawingPlayerIndex = 0;
+	var drawingPlayer, drawingPlayerIndex = 0;
 	for(; drawingPlayerIndex < this.users.length; drawingPlayerIndex++)
-		if (this.users[drawingPlayerIndex].id == this.currentPlayer) 
+		if (this.users[drawingPlayerIndex].id == this.currentPlayer) {
+			drawingPlayer = this.users[drawingPlayerIndex];
 			break;
+		}
 	console.log('turn finished; player index: ' + drawingPlayerIndex + '; current player ID: ' + this.currentPlayer);
 	
 	if (this.drawingTimer != null) {
@@ -470,6 +472,7 @@ Game.prototype.turnFinished = function(opt_pass, opt_allGuessed) {
 	this.emitAll('endRound', { 
 		word: this.currentWord, isPass: opt_pass, allGuessed: opt_allGuessed, 
 		timeUntilNextRound: autoSelectNextPlayer ? timeBetweenRounds : undefined,
+		player: drawingPlayer,
 		nextPlayer: nextPlayer});
 
 	// allow next user to draw

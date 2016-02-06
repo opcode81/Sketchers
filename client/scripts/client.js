@@ -402,7 +402,7 @@ $(document).ready(function() {
 		
 		// add chat message
 		if (msg.isPass) {
-			message = 'Player passed';
+			message = formatUser(msg.player) + ' passed';
 		}
 		else if (msg.allGuessed) {
 			message = 'All players guessed correctly';
