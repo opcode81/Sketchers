@@ -69,7 +69,7 @@ var connectionManager;
 var game;
 	
 // game mode parametrisation
-var roundTime = 120, roundNo = 0;
+var roundTime = 120;
 var correctGuessEndsTurn = false;
 var scoreByRemainingTime = true; // if false, score constant
 var autoSelectNextPlayer = true; // if false, players must manually select the next player
@@ -104,6 +104,7 @@ ConnectionManager.prototype.emit = function(socketId, messageId, data) {
 };
 
 var Game = function() {
+	this.roundNo = 0;
 	this.users = [];
 	this.canvas = [];
 	this.currentWord = null;
@@ -115,7 +116,7 @@ var Game = function() {
 	this.usersById = {};
 	this.currentHint = null;
 	this.numCurrentHintsProvided;
-	this.disconnectedUserScores = {};
+	this.disconnectedUsers = {};
 	this.nextPlayerSeqNo = 0;
 	this.setState('lobby');
 };
@@ -226,15 +227,15 @@ Game.prototype.emitUsers = function() {
 };
 	
 Game.prototype.startRound = function(user) {
-	roundNo++;
-	console.log("Round #" + roundNo);
+	this.roundNo++;
+	console.log("Round #" + this.roundNo);
 	
 	this.currentUser = user;
 	
 	this.canvas.splice(0, this.canvas.length);
 	this.emitAll('clearCanvas');
 	
-	var word = dictionary[(roundNo-1) % dictionary.length];
+	var word = dictionary[(this.roundNo-1) % dictionary.length];
 	
 	this.currentWord = word[0];
 
@@ -300,29 +301,39 @@ Game.prototype.setState = function(state, opt_data) {
 };
 
 Game.prototype.handleJoin = function(socket, msg) {
-	var nick, color, score = 0;
+	var nick, color, score = 0, scoreCurrentRound = undefined, guessedCorrectly = false;
+
 	if (msg.nick) {
 		nick = sanitizer.sanitize(msg.nick);
 	}
-	if (nick == '')
+	if (!nick)
 		return;
 	if (msg.color)
 		color = msg.color;
 	
 	if (this.usersById[socket.id]) {
-		console.log('Duplicate join attempted by ' + this.usersById[socket.id].nick);
+		console.log('handleJoin: duplicate join attempted by ' + this.usersById[socket.id].nick);
 		return;
 	}
 	
 	// add user
-	if (this.disconnectedUserScores[nick]) {
-		score = this.disconnectedUserScores[nick];
-		delete this.disconnectedUserScores[nick];
+	if (this.disconnectedUsers[nick]) { // reconnection: recover user's state 
+		var dus = this.disconnectedUsers[nick];
+		score = dus.userData.score;
+		if (this.roundNo == dus.lastRoundNo) {
+			scoreCurrentRound = dus.userData.scoreCurrentRound;
+			guessedCorrectly = dus.userData.guessedCorrectly;
+		}
+		console.log('handleJoin: reconnection with score=' + score + '/' + scoreCurrentRound + ', guessedCorrectly=' + guessedCorrectly);
+		delete this.disconnectedUsers[nick];
 	}
-	var user = { id: socket.id, nick: nick, color: color, score: score, guessedCorrectly:false, isCurrent:false, seqNo: this.nextPlayerSeqNo++ };
+	var user = { id: socket.id, nick: nick, color: color, score: score, 
+			scoreCurrentRound: scoreCurrentRound,
+			guessedCorrectly: guessedCorrectly, 
+			isCurrent:false, seqNo: this.nextPlayerSeqNo++ };
 	this.users.push(user);
 	this.usersById[socket.id] = user;
-	console.log('Player joined: id=' + socket.id + ', nick=' + msg.nick + ', users.length=' + this.users.length);
+	console.log('handleJoin: player joined: id=' + socket.id + ', nick=' + msg.nick + ', users.length=' + this.users.length);
 	
 	socket.emit('joined');
 	socket.emit('drawCanvas', this.canvas);
@@ -331,6 +342,7 @@ Game.prototype.handleJoin = function(socket, msg) {
 	this.stateData['timePassed'] = this.stateDuration();
 	if(this.state != 'lobby') {
 		this.stateData['hint'] = this.currentHint;
+		this.stateData['guessedCorrectly'] = guessedCorrectly;
 	}
 	socket.emit('state', this.stateData);
 	
@@ -414,7 +426,7 @@ ConnectionManager.prototype.handleDisconnect = function(socket) {
 
 Game.prototype.disconnectUser = function(user) {
 	console.log('disconnecting user ' + user.nick);
-	this.disconnectedUserScores[user.nick] = user.score;
+	this.disconnectedUsers[user.nick] = {userData: user, lastRoundNo: this.roundNo};
 	delete this.usersById[user.id];		
 	this.users.splice(this.users.indexOf(user), 1);
 	this.emitAll('userLeft', { nick: user.nick, color: user.color });

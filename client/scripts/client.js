@@ -406,7 +406,10 @@ $(document).ready(function() {
 		gameState = msg.state;
 		myturn = false;
 		if (msg.state == 'drawing') {
-			$('#game').removeClass('guessedIt');
+			if (!msg.guessedCorrectly)
+				$('#game').removeClass('guessedIt');
+			else
+				$('#game').addClass('guessedIt');
 			setHint(msg.hint);
 			status.html(msg.nick + ' is drawing!');
 			startTimer(msg.time - msg.timePassed);
