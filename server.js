@@ -1,7 +1,7 @@
 var app = require('http').createServer(handler),
 	io = require('socket.io').listen(app, { log: false }),
 	fs = require('fs'),
-	sanitizer = require('sanitizer'),
+	escape = require('escape-html'),
 	port = process.env.port || 42420;
 
 app.listen(port);
@@ -304,7 +304,7 @@ Game.prototype.handleJoin = function(socket, msg) {
 	var nick, color, score = 0, scoreCurrentRound = undefined, guessedCorrectly = false;
 
 	if (msg.nick) {
-		nick = sanitizer.sanitize(msg.nick);
+		nick = escape(msg.nick.trim());
 	}
 	if (!nick)
 		return;
@@ -363,7 +363,7 @@ Game.prototype.checkForEndOfRound = function() {
 };
 	
 Game.prototype.handleMessage = function (socket, user, msg) {
-	var sanitizedMsg = sanitizer.sanitize(msg.text);
+	var sanitizedMsg = escape(msg.text.trim());
 	if(sanitizedMsg != msg.text) {
 		console.log('(!) Possible attack detected from ' + socket.id + ' (' + user.nick + ') : ' + msg.text);
 	}

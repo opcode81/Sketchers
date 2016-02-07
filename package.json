@@ -5,7 +5,7 @@
 	"keywords": ["drawing", "multiplayer", "game", "pictionary", "Montagsmaler"],
 	"dependencies": {
 		"socket.io": "0.9.5",
-		"sanitizer": ""
+		"escape-html": "1.0.3"
 	},
 	"engine": "node >= 0.4.7",
 	"repository": {
