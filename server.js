@@ -507,6 +507,12 @@ Game.prototype.endRound = function(opt_pass, opt_allGuessed) {
 	this.emitAll('endRound', { 
 		word: this.currentWord, isPass: opt_pass, allGuessed: opt_allGuessed, 
 		player: lastUser});
+	
+	if (!nextUser) {
+		console.log('endRound: no user');
+		this.setState('lobby');
+		return;
+	}
 
 	// allow next user to draw
 	if (autoSelectNextPlayer) {
@@ -515,7 +521,7 @@ Game.prototype.endRound = function(opt_pass, opt_allGuessed) {
 		setTimeout(function() {
 				nextUser = findNextUser();
 				if (!nextUser) {
-					console.log('endRound: no user');
+					console.log('endRound: no user after intermission');
 					self.setState('lobby');
 				}
 				else {
