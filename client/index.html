@@ -36,11 +36,16 @@
 						<div id="drawingControls" style="margin-top:10px">
 							<table style="width:100%" cellspacing="0" cellpadding="0">
 							<tr>
-								<td style="width:60px;">
-									<input id="colour" type='text'>
-								</td>
 								<td>
-									<input id="lineWidth" type="range" min="2" max="20" step="1" value="2">
+									<table cellspacing="0" cellpadding="0"><tr>
+										<td valign="top"><canvas id="penTool"></td>
+										<td style="padding-left:10px" valign="top">
+											<input id="colour" type='text'>
+										</td>
+										<td style="padding-left:5px" valign="middle">
+											<input id="lineWidth" type="range" min="2" max="20" step="1" value="2">
+										</td>
+									</tr></table>
 								</td>
 								<td style="text-align:right">
 									<input type="button" id="clearcanvas" value="Clear canvas" />

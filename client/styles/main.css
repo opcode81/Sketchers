@@ -23,7 +23,7 @@ input:focus, button:focus {
 }
 
 /* border radius */
-button, input, .sp-replacer, #people, #canvasframe, #chatcontent {
+button, input, .sp-replacer, #people, #canvasframe, #chatcontent, #penTool {
 	border-radius: 3px;
 }
 
@@ -204,12 +204,18 @@ table.users td.scoreRound {
 	cursor:crosshair;
 }
 
-#game.drawing #canvasframe {
+#game.drawing #canvasframe, #penTool.selected {
 	border-color: #2970ae;
 }
 
 #game.guessedIt #canvasframe {
 	border-color: #ffff70;
+}
+
+#penTool {
+	background: white;
+	width: 30px;
+	height: 20px;
 }
 
 #clearcanvas {

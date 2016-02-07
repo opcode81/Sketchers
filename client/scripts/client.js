@@ -239,7 +239,7 @@ $(document).ready(function() {
 	
 	var Canvas = function($canvas, opt_bindEvents) {
 		var self = this;
-		
+		this.$canvas = $canvas;
 		this.context = $canvas[0].getContext('2d');
 			
 		// disable text selection on the canvas
@@ -267,11 +267,13 @@ $(document).ready(function() {
 	};
 	
 	Canvas.prototype.clear = function() {
-		this.context.clearRect ( 0 , 0 , canvas.width() , canvas.height() );
+		this.context.clearRect(0, 0, this.$canvas.width(), this.$canvas.height());
 	};
 	
 	var $canvas = $('#canvas'),
 		canvas = new Canvas($canvas),
+		$penTool = $('#penTool'),
+		penToolCanvas = new Canvas($penTool),
 		clearchat = $('#clearchat'),
 		selectedcolor = $('#colour'),
 		$lineWidth = $('#lineWidth'),
@@ -348,6 +350,16 @@ $(document).ready(function() {
 		chatinput.val('');
 		chatinput.focus();
 	});
+
+	$penTool.attr('width', $penTool.width()); $penTool.attr('height', $penTool.height());
+	var updatePenToolDisplay = function() {
+		var p = {x: $penTool.width()/2, y: $penTool.height()/2};
+		var line = { from: null, to: p, color: selectedcolor.spectrum('get').toHexString(), width: $lineWidth.val() };
+		penToolCanvas.clear();
+		penToolCanvas.draw(line);
+	};
+	selectedcolor.change(updatePenToolDisplay);
+	$lineWidth.change(updatePenToolDisplay);
 	
 	// ================================================
 	//                           game logic section
@@ -376,6 +388,7 @@ $(document).ready(function() {
 		status.html('Your word is<br><b style="font-size:130%">' + myword[0] + '</b><br>(difficulty: ' + myword[1] + ')');
 		selectedcolor.spectrum('set', '#000');
 		$lineWidth.val(2);
+		updatePenToolDisplay();
 		$('#game').addClass('drawing');
 		updateStatusButton();
 		play(sndStartYourTurn);
@@ -397,7 +410,7 @@ $(document).ready(function() {
 	}
 	
 	socket.on('state', function(msg) {
-		console.log('state='+msg.state);
+		console.log('state='+msg.state, msg);
 		gameState = msg.state;
 		myturn = false;
 		if (msg.state == 'drawing') {
