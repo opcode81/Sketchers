@@ -200,6 +200,7 @@ ConnectionManager.prototype.handleConnection = function(socket) {
 	bindGame('draw');
 	bindGame('readyToDraw');
 	bindGame('clearCanvas');
+	bindGame('leave');
 };
 
 Game.prototype.addHint = function() {
@@ -410,11 +411,11 @@ ConnectionManager.prototype.handleDisconnect = function(socket) {
 	delete this.socketsById[socket.id];
 	this.handleGameMessage(socket, 'disconnect');
 }
-	
-Game.prototype.handleDisconnect = function(socket, user) {
-	console.log('user disconnected: nick=' + user.nick);
+
+Game.prototype.disconnectUser = function(user) {
+	console.log('disconnecting user ' + user.nick);
 	this.disconnectedUserScores[user.nick] = user.score;
-	delete this.usersById[socket.id];		
+	delete this.usersById[user.id];		
 	this.users.splice(this.users.indexOf(user), 1);
 	this.emitAll('userLeft', { nick: user.nick, color: user.color });
 	this.emitUsers();
@@ -425,6 +426,15 @@ Game.prototype.handleDisconnect = function(socket, user) {
 	else {
 		this.checkForEndOfRound();
 	}
+};
+	
+Game.prototype.handleDisconnect = function(socket, user) {
+	this.disconnectUser(user);
+};
+
+Game.prototype.handleLeave = function(socket, user) {
+	this.disconnectUser(user);
+	socket.emit('youLeft');
 };
 	
 Game.prototype.handleDraw = function (socket, user, line) {

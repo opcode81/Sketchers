@@ -59,7 +59,8 @@ $(document).ready(function() {
 		chatnick = $('#chatnick'),
 		$userNameInput = $('#joinNick'),
 		$joinButton = $('#joinButton'),
-		$changeColourButton = $('#changeColourButton');
+		$changeColourButton = $('#changeColourButton'),
+		$leaveGameButton = $('#leaveGameButton');
 	
 	var sndEndRound = new Audio('sounds/endRound.ogg'),
 		sndStartYourTurn = new Audio("sounds/startYourTurn.ogg"),
@@ -85,13 +86,17 @@ $(document).ready(function() {
 		          ["#600","#783f04","#7f6000","#274e13","#0c343d","#073763","#20124d","#4c1130"]]
 	});
 	
-	// connect to server
-	socket.on('connect', function () {
-		console.log('socket connected');
+	var showLogin = function() {
 		$("#initial").hide();
 		$("#join").show();
 		$("#game").hide();
 		$userNameInput.focus();
+	}
+	
+	// connect to server
+	socket.on('connect', function () {
+		console.log('socket connected');
+		showLogin();
 	});
 	
 	var setRandomUserColour = function() {
@@ -121,6 +126,13 @@ $(document).ready(function() {
 		chatinput.focus();
 		$('#game').removeClass('drawing');
 		$('#game').removeClass('guessedIt');
+	});
+
+	$leaveGameButton.click(function() {
+		socket.emit('leave');
+	});
+	socket.on('youLeft', function() {
+		showLogin();
 	});
 	
 	socket.on('users', function (users) {
