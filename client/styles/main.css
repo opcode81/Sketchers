@@ -23,7 +23,7 @@ input:focus, button:focus {
 }
 
 /* border radius */
-button, input, .sp-replacer, #people, #canvasframe, #chatcontent, #penTool {
+button, input, .sp-replacer, #people, #canvasframe, #chatcontent, #penTool, #eraserTool {
 	border-radius: 3px;
 }
 
@@ -204,7 +204,7 @@ table.users td.scoreRound {
 	cursor:crosshair;
 }
 
-#game.drawing #canvasframe, #penTool.selected {
+#game.drawing #canvasframe, #penTool.selected, #eraserTool.selected {
 	border-color: #2970ae;
 }
 
@@ -212,10 +212,15 @@ table.users td.scoreRound {
 	border-color: #ffff70;
 }
 
-#penTool {
+#penTool, #eraserTool {
 	background: white;
 	width: 30px;
-	height: 20px;
+	height: 18px;
+	border: 2px solid #71b07f;
+}
+
+#eraserTool {
+	background: #ccc;
 }
 
 #clearcanvas {

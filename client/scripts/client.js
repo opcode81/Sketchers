@@ -274,6 +274,9 @@ $(document).ready(function() {
 		canvas = new Canvas($canvas),
 		$penTool = $('#penTool'),
 		penToolCanvas = new Canvas($penTool),
+		$eraserTool = $('#eraserTool'),
+		eraserToolCanvas = new Canvas($eraserTool),
+		eraserLineWidth = 20,
 		clearchat = $('#clearchat'),
 		selectedcolor = $('#colour'),
 		$lineWidth = $('#lineWidth'),
@@ -283,8 +286,16 @@ $(document).ready(function() {
 		myturn = false;
 
 	var drawWithEvent = function(e) {
-		var newpoint = { x: e.offsetX, y: e.offsetY};
-		line = { from: lastpoint, to: newpoint, color: selectedcolor.spectrum('get').toHexString(), width: $lineWidth.val() };
+		var newpoint = { x: e.offsetX, y: e.offsetY}, color, lineWidth;
+		if ($eraserTool.hasClass('selected')) {
+			color = '#fff';
+			lineWidth = eraserLineWidth;
+		}
+		else {
+			color = selectedcolor.spectrum('get').toHexString();
+			lineWidth = $lineWidth.val();
+		}
+		line = {from: lastpoint, to: newpoint, color: color, width: lineWidth};
 		canvas.draw(line);
 		lastpoint = newpoint;
 		socket.emit('draw', line);
@@ -351,7 +362,26 @@ $(document).ready(function() {
 		chatinput.focus();
 	});
 
-	$penTool.attr('width', $penTool.width()); $penTool.attr('height', $penTool.height());
+	function selectEraser(selected) {
+		if (selected) {
+			$eraserTool.addClass('selected');
+			$penTool.removeClass('selected');
+		}
+		else {
+			$eraserTool.removeClass('selected');
+			$penTool.addClass('selected');
+		}
+	};
+	$eraserTool.attr('width', $eraserTool.innerWidth()); $eraserTool.attr('height', $eraserTool.innerHeight());
+	eraserToolCanvas.draw({from: null, to: {x: $eraserTool.width()/2, y: $eraserTool.height()/2}, color: '#fff', width: eraserLineWidth});
+	$eraserTool.click(function() {
+		selectEraser(true);
+	});
+	
+	$penTool.attr('width', $penTool.innerWidth()); $penTool.attr('height', $penTool.innerHeight());
+	$penTool.click(function() {
+		selectEraser(false);
+	});
 	var updatePenToolDisplay = function() {
 		var p = {x: $penTool.width()/2, y: $penTool.height()/2};
 		var line = { from: null, to: p, color: selectedcolor.spectrum('get').toHexString(), width: $lineWidth.val() };
@@ -389,6 +419,7 @@ $(document).ready(function() {
 		selectedcolor.spectrum('set', '#000');
 		$lineWidth.val(2);
 		updatePenToolDisplay();
+		selectEraser(false);
 		$('#game').addClass('drawing');
 		updateStatusButton();
 		play(sndStartYourTurn);
