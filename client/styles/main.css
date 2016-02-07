@@ -58,6 +58,11 @@ button:hover, input[type=button]:hover {
 	opacity: 0.8;
 }
 
+input:disabled, button:disabled {
+	pointer-events:none;
+	cursor:normal;
+}
+
 #main {
 	background: #71b07f;
 	border-radius: 5px;
