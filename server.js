@@ -97,7 +97,7 @@ var Game = function() {
 	this.users = [];
 	this.canvas = [];
 	this.currentWord = null;
-	this.currentPlayer = null; 
+	this.currentUser = null;
 	this.drawingTimer = null;
 	this.hintIntervalId = null;
 	this.roundStartTime = null;
@@ -105,6 +105,7 @@ var Game = function() {
 	this.currentHint = null;
 	this.numCurrentHintsProvided;
 	this.disconnectedUserScores = {};
+	this.nextPlayerSeqNo = 0;
 };
 
 Game.prototype.emit = function(userOrUserId, messageId, data) {
@@ -226,16 +227,11 @@ Game.prototype.emitUsers = function() {
 	this.emitAll('users', sortedUsers);
 };
 	
-Game.prototype.startTurn = function(playerId) {
+Game.prototype.startRound = function(user) {
 	roundNo++;
 	console.log("Round #" + roundNo);
 	
-	this.currentPlayer = playerId;
-	var user = this.usersById[playerId];
-	if (!user) {
-		console.error('startTurn: found no user for id ' + playerId);
-		return;
-	}
+	this.currentUser = user;
 	
 	this.canvas.splice(0, this.canvas.length);
 	this.emitAll('clearCanvas');
@@ -264,7 +260,7 @@ Game.prototype.startTurn = function(playerId) {
 	// determine the maximum number of additional hints to provide
 	var maxHintsForWord = Math.floor(this.currentWord.length * maxHintFraction);
 	var hintsToProvideInTotal = Math.min(maxHints, maxHintsForWord);
-	console.log('startTurn: ' + hintsToProvideInTotal + ' hints will be provided');
+	console.log('startRound: ' + hintsToProvideInTotal + ' hints will be provided');
 	var hintsYetToProvide = hintsToProvideInTotal - this.numCurrentHintsProvided;
 	var hintInterval = 1000 * (roundTime / (hintsYetToProvide+1));
 
@@ -276,13 +272,13 @@ Game.prototype.startTurn = function(playerId) {
 	});
 	
 	// send messages
-	console.log("next player id: " + playerId);
-	this.emit(playerId, 'youDraw', word);
+	console.log("next player id: " + this.currentUser.id);
+	this.emit(this.currentUser, 'youDraw', word);
 	this.emitAll('startRound', { color: user.color, nick: user.nick, time:roundTime, hint:this.currentHint });
 	this.emitUsers();
 	
 	// set the timers for this round
-	this.drawingTimer = setTimeout(proxy(this.turnFinished, this), roundTime * 1000);
+	this.drawingTimer = setTimeout(proxy(this.endRound, this), roundTime * 1000);
 	this.hintIntervalId = setInterval(proxy(this.provideHint, this), hintInterval);
 	this.roundStartTime = new Date().getTime();
 };
@@ -312,7 +308,7 @@ Game.prototype.handleJoin = function(socket, msg) {
 		score = this.disconnectedUserScores[nick];
 		delete this.disconnectedUserScores[nick];
 	}
-	var user = { id: socket.id, nick: nick, color: color, score: score, guessedCorrectly:false, isCurrent:false };
+	var user = { id: socket.id, nick: nick, color: color, score: score, guessedCorrectly:false, isCurrent:false, seqNo: this.nextPlayerSeqNo++ };
 	this.users.push(user);
 	this.usersById[socket.id] = user;
 	console.log('Player joined: id=' + socket.id + ', nick=' + msg.nick + ', users.length=' + this.users.length);
@@ -320,8 +316,8 @@ Game.prototype.handleJoin = function(socket, msg) {
 	socket.emit('joined');
 	socket.emit('drawCanvas', this.canvas);
 	// notify if someone is drawing
-	if(this.currentPlayer) {
-		var currentUser = this.usersById[this.currentPlayer];
+	if(this.currentUser) {
+		var currentUser = this.currentUser;
 		if (currentUser) {
 			var timePassedSecs = Math.floor((new Date().getTime() - this.roundStartTime) / 1000);
 			socket.emit('startRound', { color: currentUser.color, nick: currentUser.nick, time: roundTime-timePassedSecs, hint:this.currentHint });
@@ -333,13 +329,13 @@ Game.prototype.handleJoin = function(socket, msg) {
 };
 	
 Game.prototype.checkForEndOfRound = function() {
-	if (this.currentPlayer) {
+	if (this.currentUser) {
 		var doneUsers = this.users.filter(function(u) { return u.guessedCorrectly; });
 		var numGuessed = doneUsers.length;
 		var allGuessed = numGuessed == this.users.length-1; 
 		if ((numGuessed > 0 && correctGuessEndsTurn) || allGuessed) {
 			console.log('checkForEndOfRound: ending turn');
-			this.turnFinished(false, allGuessed);
+			this.endRound(false, allGuessed);
 		}
 	}
 };
@@ -359,7 +355,7 @@ Game.prototype.handleMessage = function (socket, user, msg) {
 		this.emitAll('message', { text: sanitizedMsg, color: user.color, nick: user.nick });
 	
 	// check if current word was guessed by a player who isn't the drawing player while the round is active
-	if (isCorrectGuess && this.currentPlayer != null && this.currentPlayer != socket.id) {
+	if (isCorrectGuess && this.currentUser != null && this.currentUser.id != socket.id) {
 		// ... and the user did not previously guess the word
 		if(user && !user.guessedCorrectly) {
 			var timePassed = new Date().getTime() - this.roundStartTime;
@@ -379,7 +375,7 @@ Game.prototype.handleMessage = function (socket, user, msg) {
 			user.guessedCorrectly = true;
 			pointsAwarded.push([user, points]);
 			// * drawing player
-			var drawingUser = this.usersById[this.currentPlayer];
+			var drawingUser = this.currentUser;
 			if (scoreByRemainingTime)
 				points = Math.floor(timeRemainingSecs / (this.users.length-1));
 			else
@@ -413,9 +409,9 @@ Game.prototype.handleDisconnect = function(socket, user) {
 	this.users.splice(this.users.indexOf(user), 1);
 	this.emitAll('userLeft', { nick: user.nick, color: user.color });
 	this.emitUsers();
-	if(this.currentPlayer == user.id) {
+	if(this.currentUser && this.currentUser.id == user.id) {
 		console.log('disconnect: current player disconnected; ending turn');
-		this.turnFinished();
+		this.endRound();
 	}
 	else {
 		this.checkForEndOfRound();
@@ -423,7 +419,7 @@ Game.prototype.handleDisconnect = function(socket, user) {
 };
 	
 Game.prototype.handleDraw = function (socket, user, line) {
-	if(this.currentPlayer == socket.id) {
+	if(this.currentUser && this.currentUser.id == socket.id) {
 		this.canvas.push(line);
 		this.emitAll('draw', line);
 	}
@@ -431,7 +427,7 @@ Game.prototype.handleDraw = function (socket, user, line) {
 	
 Game.prototype.handleClearCanvas = function (socket, user) {
 	console.log('received clearCanvas');
-	if(this.currentPlayer == socket.id) {
+	if(this.currentUser && this.currentUser.id == socket.id) {
 		console.log('clearCanvas from current player can be processed');
 		this.canvas.splice(0, this.canvas.length);
 		this.emitAll('clearCanvas');
@@ -440,26 +436,30 @@ Game.prototype.handleClearCanvas = function (socket, user) {
 		
 Game.prototype.handleReadyToDraw = function(socket, user) {
 	console.log('ready: id=' + socket.id);
-	if (!this.currentPlayer) { // new round triggered
+	if (!this.currentUser) { // new round triggered
 		console.log('ready: starting turn of ' + socket.id);
-		this.startTurn(socket.id);
-	} else if (this.currentPlayer == socket.id) { // pass
+		this.startRound(user);
+	} else if (this.currentUser.id == socket.id) { // pass
 		console.log('ready: player passed');
-		this.turnFinished(true);
+		this.endRound(true);
 	}
 };
 	
-Game.prototype.turnFinished = function(opt_pass, opt_allGuessed) {
-	var self = this;
+Game.prototype.endRound = function(opt_pass, opt_allGuessed) {
+	var self = this, lastUser = this.currentUser;
+	
+	var findNextUser = function() {
+		var seq = self.users.slice().sort(function(a,b) { return a.seqNo - b.seqNo; } );
+		for (var i = 0; i < seq.length; ++i) {
+			var u = seq[i];
+			if (u.seqNo > lastUser.seqNo) {
+				return u;
+			}
+		}
+		return seq[0];
+	};
 	
 	console.log('turn finished: users.length=' + this.users.length);
-	var drawingPlayer, drawingPlayerIndex = 0;
-	for(; drawingPlayerIndex < this.users.length; drawingPlayerIndex++)
-		if (this.users[drawingPlayerIndex].id == this.currentPlayer) {
-			drawingPlayer = this.users[drawingPlayerIndex];
-			break;
-		}
-	console.log('turn finished; player index: ' + drawingPlayerIndex + '; current player ID: ' + this.currentPlayer);
 	
 	if (this.drawingTimer != null) {
 		clearTimeout(this.drawingTimer);
@@ -470,31 +470,29 @@ Game.prototype.turnFinished = function(opt_pass, opt_allGuessed) {
 		this.hintIntervalId = null;
 	}
 	
-	this.currentPlayer = null;
-	var nextPlayer = this.users[(drawingPlayerIndex+1) % this.users.length];
+	this.currentUser = null;
+	var nextUser = findNextUser();
 	
 	this.emitAll('endRound', { 
 		word: this.currentWord, isPass: opt_pass, allGuessed: opt_allGuessed, 
 		timeUntilNextRound: autoSelectNextPlayer ? timeBetweenRounds : undefined,
-		player: drawingPlayer,
-		nextPlayer: nextPlayer});
+		player: lastUser,
+		nextPlayer: nextUser});
 
 	// allow next user to draw
 	if (autoSelectNextPlayer) {
 		console.log('Waiting ' + timeBetweenRounds + ' seconds to start next round');
 		setTimeout(function() {
-				nextPlayer = self.users[(drawingPlayerIndex+1) % self.users.length];
-				console.log('drawingPlayerIndex=' + drawingPlayerIndex + ', users.length=' + self.users.length);
-				if (nextPlayer == undefined)
+				nextUser = findNextUser();
+				if (nextUser == undefined)
 					console.log("no user");
 				else {
-					console.log('turn finished; new player ID: ' + nextPlayer.id);
-					self.startTurn(nextPlayer.id);
+					console.log('turn finished; next user ID: ' + nextUser.id);
+					self.startRound(nextUser);
 				}
 			}, timeBetweenRounds*1000);
 	}
 	else {
-		this.currentPlayer = null;
 		this.emitAll('youCanDraw');
 	}
 };
