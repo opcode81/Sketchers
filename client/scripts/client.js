@@ -49,6 +49,7 @@ $(document).ready(function() {
 	var socket = io.connect('/');
 	
 	$(window).on('beforeunload', function(){
+		console.log('beforeunload: closing socket');
 	    socket.close();
 	});
 	
@@ -86,6 +87,7 @@ $(document).ready(function() {
 	
 	// connect to server
 	socket.on('connect', function () {
+		console.log('socket connected');
 		$("#initial").hide();
 		$("#join").show();
 		$("#game").hide();
@@ -114,10 +116,11 @@ $(document).ready(function() {
 	socket.on('joined', function() {
 		$('#join').hide();
 		$('#game').show();
-		status.text('Click "Ready to draw!" to start this round.');
 		chatinput.removeProp('disabled');
 		chatnick.removeProp('disabled');
 		chatinput.focus();
+		$('#game').removeClass('drawing');
+		$('#game').removeClass('guessedIt');
 	});
 	
 	socket.on('users', function (users) {
@@ -349,7 +352,7 @@ $(document).ready(function() {
 		myword = '',
 		timeleft = null,
 		drawingTimer = null,
-		roundRunning = false;
+		gameState;
 	
 	function setHint(hint) {
 		$hint.html(hint.split('').join('&nbsp;'));
@@ -360,11 +363,14 @@ $(document).ready(function() {
 	});
 	
 	socket.on('youDraw', function(word) {
-		myturn = true;
 		console.log("youDraw");
+		myturn = true;
 		myword = word;
 		status.html('Your word is<br><b style="font-size:130%">' + myword[0] + '</b><br>(difficulty: ' + myword[1] + ')');
+		selectedcolor.spectrum('set', '#000');
+		$lineWidth.val(2);
 		$('#game').addClass('drawing');
+		updateStatusButton();
 		play(sndStartYourTurn);
 	});
 	
@@ -383,29 +389,36 @@ $(document).ready(function() {
 		}
 	}
 	
-	socket.on('startRound', function(msg) {
-		setHint(msg.hint);
-		roundRunning = true;
-		
-		if(!myturn) {
+	socket.on('state', function(msg) {
+		console.log('state='+msg.state);
+		gameState = msg.state;
+		myturn = false;
+		if (msg.state == 'drawing') {
+			$('#game').removeClass('guessedIt');
+			setHint(msg.hint);
 			status.html(msg.nick + ' is drawing!');
+			startTimer(msg.time - msg.timePassed);
+			chatcontent.append('<p>&raquo; <span style="color:' + msg.color + '">' + msg.nick + '</span> is drawing!</p>');
+			chatScrollDown();
 		}
-		else {
-			readytodraw.prop('value', 'Pass (' + timeleft + ')');
+		else if (msg.state == 'intermission') {
+			setHint(msg.hint);
+			status.html(msg.nextPlayer.nick + ' is up next!');
+			startTimer(msg.time - msg.timePassed);
 		}
-		console.log("startRound; myTurn=" + myturn);
-
-		startTimer(msg.time);
-		
-		chatcontent.append('<p>&raquo; <span style="color:' + msg.color + '">' + msg.nick + '</span> is drawing!</p>');
-		chatScrollDown();
+		else if (msg.state == 'lobby') {
+			$('#game').removeClass('guessedIt');
+			setHint('LOBBY');
+			status.text('Click "Ready to draw!" to start this round.');
+			chatcontent.append('<p>When all players are ready, click <strong>Ready to draw!</strong> to start drawing.</p>');
+			chatScrollDown();
+		}
+		updateStatusButton();
 	});
 	
 	socket.on('endRound', function(msg) { 
 		var message;
 		play(sndEndRound);
-		roundRunning = false;
-		setHint(msg.word);
 		
 		// add chat message
 		if (msg.isPass) {
@@ -422,25 +435,7 @@ $(document).ready(function() {
 		
 		console.log("endRound");
 		stopTimer();
-		myturn = false;
 		$('#game').removeClass('drawing');
-		$('#game').removeClass('guessedIt');
-		selectedcolor.spectrum('set', '#000');
-		$lineWidth.val(2);
-		
-		if (msg.timeUntilNextRound) {
-			status.html(msg.nextPlayer.nick + ' is up next!');
-			startTimer(msg.timeUntilNextRound);
-		}
-	});
-	
-	socket.on('youCanDraw', function(msg) {
-		if(myturn) {
-			myturn = false;
-			status.text('Click \'Ready to draw!\' to start drawing');
-		}
-		chatcontent.append('<p>Click <strong>Ready to draw!</strong> button to draw.</p>');
-		chatScrollDown();
 	});
 	
 	socket.on('hint', function(msg) {
@@ -468,24 +463,31 @@ $(document).ready(function() {
 	function timerTick() {
 		if(timeleft && timeleft > 0) {
 			timeleft--;
-			if (roundRunning) {
-				if (myturn) {
-					readytodraw.prop('value', 'Pass');
-					readytodraw.attr("disabled", false);
-				}
-				else {
-					readytodraw.prop('value', 'Guess!');
-					readytodraw.attr("disabled", true);
-				}
+			$timer.text(timeleft);
+		}
+		else {
+			stopTimer();
+		}
+	}
+	
+	function updateStatusButton() {
+		if (gameState == 'drawing') {
+			if (myturn) {
+				readytodraw.prop('value', 'Pass');
+				readytodraw.attr("disabled", false);
 			}
 			else {
-				readytodraw.prop('value', 'Wait!');
+				readytodraw.prop('value', 'Guess!');
 				readytodraw.attr("disabled", true);
 			}
-			$timer.text(timeleft);
-		} else {
-			stopTimer();
+		}
+		else if (gameState == 'intermission') {
+			readytodraw.prop('value', 'Wait!');
+			readytodraw.attr("disabled", true);
+		}
+		else if (gameState == 'lobby') {
 			readytodraw.prop('value', 'Ready to draw!');
+			readytodraw.attr("disabled", false);
 		}
 	}
 });

@@ -64,6 +64,19 @@ function handler (req, res) {
 // app logic
 // ================================================
 
+var dictionary;
+var connectionManager;
+var game;
+	
+// game mode parametrisation
+var roundTime = 120, roundNo = 0;
+var correctGuessEndsTurn = false;
+var scoreByRemainingTime = true; // if false, score constant
+var autoSelectNextPlayer = true; // if false, players must manually select the next player
+var maxHints = 4;
+var maxHintFraction = 0.40;
+var timeBetweenRounds = 7; // seconds
+
 var proxy = function(fn, ctx) {
 	return function() {
 		fn.apply(ctx, arguments);
@@ -90,9 +103,6 @@ ConnectionManager.prototype.emit = function(socketId, messageId, data) {
 		socket.emit(messageId, data);
 };
 
-var connectionManager = new ConnectionManager();
-var dictionary;
-
 var Game = function() {
 	this.users = [];
 	this.canvas = [];
@@ -100,12 +110,14 @@ var Game = function() {
 	this.currentUser = null;
 	this.drawingTimer = null;
 	this.hintIntervalId = null;
-	this.roundStartTime = null;
+	this.state = null;
+	this.stateData = null;
 	this.usersById = {};
 	this.currentHint = null;
 	this.numCurrentHintsProvided;
 	this.disconnectedUserScores = {};
 	this.nextPlayerSeqNo = 0;
+	this.setState('lobby');
 };
 
 Game.prototype.emit = function(userOrUserId, messageId, data) {
@@ -132,17 +144,6 @@ Game.prototype.handlerProxy = function(socket, messageId, data) {
 	var handler = this[handlerName(messageId)];
 	handler.call(this, socket, user, data);
 };
-
-var game = new Game();
-	
-// game mode parametrisation
-var roundTime = 120, roundNo = 0;
-var correctGuessEndsTurn = false;
-var scoreByRemainingTime = true; // if false, score constant
-var autoSelectNextPlayer = true; // if false, players must manually select the next player
-var maxHints = 4;
-var maxHintFraction = 0.40;
-var timeBetweenRounds = 7; // seconds
 
 function shuffle(array) {
 	  var currentIndex = array.length, temporaryValue, randomIndex;
@@ -200,10 +201,6 @@ ConnectionManager.prototype.handleConnection = function(socket) {
 	bindGame('readyToDraw');
 	bindGame('clearCanvas');
 };
-
-io.sockets.on('connection', function (socket) {
-	connectionManager.handleConnection(socket);
-});
 
 Game.prototype.addHint = function() {
 	var indices = [];
@@ -270,22 +267,35 @@ Game.prototype.startRound = function(user) {
 		u.guessedCorrectly = false;
 		u.scoreCurrentRound = undefined;
 	});
-	
+
 	// send messages
 	console.log("next player id: " + this.currentUser.id);
+	this.setState('drawing', { color: user.color, nick: user.nick, time:roundTime, hint:this.currentHint });
 	this.emit(this.currentUser, 'youDraw', word);
-	this.emitAll('startRound', { color: user.color, nick: user.nick, time:roundTime, hint:this.currentHint });
 	this.emitUsers();
 	
 	// set the timers for this round
 	this.drawingTimer = setTimeout(proxy(this.endRound, this), roundTime * 1000);
 	this.hintIntervalId = setInterval(proxy(this.provideHint, this), hintInterval);
-	this.roundStartTime = new Date().getTime();
 };
 	
 ConnectionManager.prototype.handleJoin = function(socket, msg) {
 	'use strict';
 	game.handleJoin(socket, msg);
+};
+
+Game.prototype.stateDuration = function() {
+	return Math.floor((new Date().getTime() - this.stateStartTime.getTime()) / 1000);
+};
+
+Game.prototype.setState = function(state, opt_data) {
+	var data = opt_data || {};
+	data['state'] = state;
+	data['timePassed'] = 0;
+	this.state = state;
+	this.stateData = data;
+	this.stateStartTime = new Date();
+	this.emitAll('state', data);
 };
 
 Game.prototype.handleJoin = function(socket, msg) {
@@ -315,14 +325,13 @@ Game.prototype.handleJoin = function(socket, msg) {
 	
 	socket.emit('joined');
 	socket.emit('drawCanvas', this.canvas);
-	// notify if someone is drawing
-	if(this.currentUser) {
-		var currentUser = this.currentUser;
-		if (currentUser) {
-			var timePassedSecs = Math.floor((new Date().getTime() - this.roundStartTime) / 1000);
-			socket.emit('startRound', { color: currentUser.color, nick: currentUser.nick, time: roundTime-timePassedSecs, hint:this.currentHint });
-		}
+	
+	// notify about game state
+	this.stateData['timePassed'] = this.stateDuration();
+	if(this.state != 'lobby') {
+		this.stateData['hint'] = this.currentHint;
 	}
+	socket.emit('state', this.stateData);
 	
 	this.emitAll('userJoined', { nick: nick, color: color });
 	this.emitUsers();	
@@ -358,7 +367,7 @@ Game.prototype.handleMessage = function (socket, user, msg) {
 	if (isCorrectGuess && this.currentUser != null && this.currentUser.id != socket.id) {
 		// ... and the user did not previously guess the word
 		if(user && !user.guessedCorrectly) {
-			var timePassed = new Date().getTime() - this.roundStartTime;
+			var timePassed = new Date().getTime() - this.stateStartTime.getTime();
 			var timePassedSecs = Math.floor(timePassed / 1000);
 			var timeRemainingSecs = roundTime - timePassedSecs;
 			
@@ -436,10 +445,10 @@ Game.prototype.handleClearCanvas = function (socket, user) {
 		
 Game.prototype.handleReadyToDraw = function(socket, user) {
 	console.log('ready: id=' + socket.id);
-	if (!this.currentUser) { // new round triggered
+	if (this.state == 'lobby') {
 		console.log('ready: starting turn of ' + socket.id);
 		this.startRound(user);
-	} else if (this.currentUser.id == socket.id) { // pass
+	} else if (this.currentUser && this.currentUser.id == socket.id) { // pass
 		console.log('ready: player passed');
 		this.endRound(true);
 	}
@@ -475,24 +484,32 @@ Game.prototype.endRound = function(opt_pass, opt_allGuessed) {
 	
 	this.emitAll('endRound', { 
 		word: this.currentWord, isPass: opt_pass, allGuessed: opt_allGuessed, 
-		timeUntilNextRound: autoSelectNextPlayer ? timeBetweenRounds : undefined,
-		player: lastUser,
-		nextPlayer: nextUser});
+		player: lastUser});
 
 	// allow next user to draw
 	if (autoSelectNextPlayer) {
-		console.log('Waiting ' + timeBetweenRounds + ' seconds to start next round');
+		this.setState('intermission', {time: timeBetweenRounds, nextPlayer: nextUser, hint: this.currentHint}); 
+		console.log('endRound: waiting ' + timeBetweenRounds + ' seconds to start next round');
 		setTimeout(function() {
 				nextUser = findNextUser();
-				if (nextUser == undefined)
-					console.log("no user");
+				if (!nextUser) {
+					console.log('endRound: no user');
+					self.setState('lobby');
+				}
 				else {
-					console.log('turn finished; next user ID: ' + nextUser.id);
+					console.log('endRound: next user ID: ' + nextUser.id);
 					self.startRound(nextUser);
 				}
 			}, timeBetweenRounds*1000);
 	}
 	else {
-		this.emitAll('youCanDraw');
+		this.setState('lobby');
 	}
 };
+
+game = new Game();
+
+connectionManager = new ConnectionManager();
+io.sockets.on('connection', function (socket) {
+	connectionManager.handleConnection(socket);
+});
