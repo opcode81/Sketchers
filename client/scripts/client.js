@@ -237,20 +237,19 @@ $(document).ready(function() {
 	//                           canvas drawing section
 	// ================================================
 	
-	var canvas = $('#canvas'),
-		clearcanvas = $('#clearcanvas'),
-		clearchat = $('#clearchat'),
-		selectedcolor = $('#colour'),
-		$lineWidth = $('#lineWidth'),
-		context = canvas[0].getContext('2d'),
-		lastpoint = null,
-		painting = false,
-		mouseoutWhilePainting = false,
-		myturn = false;
+	var Canvas = function($canvas, opt_bindEvents) {
+		var self = this;
+		
+		this.context = $canvas[0].getContext('2d');
+			
+		// disable text selection on the canvas
+		$canvas.mousedown(function () {
+			return false;
+		});
+	};
 	
-	socket.on('draw', draw);
-	
-	function draw(line) {
+	Canvas.prototype.draw = function(line) {
+		var context = this.context;
 		context.lineJoin = 'round';
 		context.lineWidth = line.width;
 		context.strokeStyle = line.color;
@@ -265,87 +264,83 @@ $(document).ready(function() {
 		context.lineTo(line.to.x, line.to.y);
 		context.closePath();
 		context.stroke();
-	}
+	};
 	
-	// Disable text selection on the canvas
-	canvas.mousedown(function () {
-		return false;
-	});
+	Canvas.prototype.clear = function() {
+		this.context.clearRect ( 0 , 0 , canvas.width() , canvas.height() );
+	};
 	
-	var drawWithEvent = function(canvas, e) {
+	var $canvas = $('#canvas'),
+		canvas = new Canvas($canvas),
+		clearchat = $('#clearchat'),
+		selectedcolor = $('#colour'),
+		$lineWidth = $('#lineWidth'),
+		lastpoint = null,
+		painting = false,
+		mouseoutWhilePainting = false,
+		myturn = false;
+
+	var drawWithEvent = function(e) {
 		var newpoint = { x: e.offsetX, y: e.offsetY};
 		line = { from: lastpoint, to: newpoint, color: selectedcolor.spectrum('get').toHexString(), width: $lineWidth.val() };
-		draw(line);
+		canvas.draw(line);
 		lastpoint = newpoint;
 		socket.emit('draw', line);
 	};
 	
-	canvas.mousedown(function(e) {
+	$canvas.mousedown(function(e) {
 		if(myturn) {
 			painting = true;
 			mouseoutWhilePainting = false;
 			lastpoint = null;
-			drawWithEvent(this, e);
+			drawWithEvent(e);
 		}
 	});
 	
-	canvas.mousemove(function(e) {
+	$canvas.mousemove(function(e) {
 		if(myturn && painting) {
-			drawWithEvent(this, e);
+			drawWithEvent(e);
 		}
 	});
 	
-	canvas.mouseout(function(e) {
+	$canvas.mouseout(function(e) {
 		if (painting) {
 			mouseoutWhilePainting = true;
 			painting = false;
 		}
 	});
 	
-	canvas.mouseup(function(e) {
+	$canvas.mouseup(function(e) {
 		painting = false;
 	});
 	
-	canvas.mouseover(function(e) {
+	$canvas.mouseover(function(e) {
 		if (mouseoutWhilePainting && e.buttons == 1) { // returning to canvas with button still pressed
 			painting = true;
 			mouseoutWhilePainting = false;
 			lastpoint = null;
-			drawWithEvent(this, e);
+			drawWithEvent(e);
 		}
 	});
 	
-	socket.on('drawCanvas', function(canvasToDraw) {
-		if(canvasToDraw) {
-			canvas.width(canvas.width());
-			context.lineJoin = 'round';
-			
-			for(var i=0; i < canvasToDraw.length; i++)
-			{		
-				var line = canvasToDraw[i];
-				context.lineWidth = line.width;
-				context.strokeStyle = line.color;
-				context.beginPath();
-				if(line.from){
-					context.moveTo(line.from.x, line.from.y);
-				}else{
-					context.moveTo(line.to.x-1, line.to.y);
-				}
-				context.lineTo(line.to.x, line.to.y);
-				context.closePath();
-				context.stroke();
+	socket.on('draw', $.proxy(canvas.draw, canvas));
+	
+	socket.on('drawCanvas', function(lines) {
+		if(lines) {
+			for(var i=0; i < lines.length; i++) {		
+				canvas.draw(lines[i]);
 			}
 		}
 	});
 	
-	clearcanvas.click(function() {
+	$('#clearcanvas').click(function() {
 		if(myturn) {
 			socket.emit('clearCanvas');
 		}
 	});
 	
 	socket.on('clearCanvas', function() {
-		context.clearRect ( 0 , 0 , canvas.width() , canvas.height() );
+		canvas.clear();
 	});
 	
 	clearchat.click(function() {
