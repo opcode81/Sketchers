@@ -89,6 +89,7 @@ $(document).ready(function() {
 		$("#initial").hide();
 		$("#join").show();
 		$("#game").hide();
+		$userNameInput.focus();
 	});
 	
 	var setRandomUserColour = function() {
@@ -99,9 +100,15 @@ $(document).ready(function() {
 	setRandomUserColour();
 	var myNick;
 	
-	$joinButton.click(function() {
+	var joinGame = function() {
 		myNick = $('#joinNick').val();
 		socket.emit('join', { nick: myNick, color: $userNameInput.css('color')});
+	};
+	$joinButton.click(joinGame);
+	$userNameInput.keydown(function(e) {
+		if (e.keyCode === 13) {
+			joinGame();
+		}
 	});
 	
 	socket.on('joined', function() {
