@@ -306,10 +306,17 @@ Game.prototype.handleJoin = function(socket, msg) {
 	if (msg.nick) {
 		nick = escape(msg.nick.trim());
 	}
-	if (!nick)
-		return;
 	if (msg.color)
 		color = msg.color;
+
+	if (!nick) {
+		socket.emit('joinError', {error:'invalidNick'});
+		return;
+	}
+	if(this.users.filter(function (u) { return u.nick == nick; }).length > 0) {
+		socket.emit('joinError', {error:'nickTaken'});
+		return;
+	}
 	
 	if (this.usersById[socket.id]) {
 		console.log('handleJoin: duplicate join attempted by ' + this.usersById[socket.id].nick);

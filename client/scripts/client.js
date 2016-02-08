@@ -89,6 +89,7 @@ $(document).ready(function() {
 	var showLogin = function() {
 		$("#initial").hide();
 		$("#join").show();
+		$('#joinError').hide();
 		$("#game").hide();
 		$userNameInput.focus();
 	}
@@ -116,6 +117,17 @@ $(document).ready(function() {
 		if (e.keyCode === 13) {
 			joinGame();
 		}
+	});
+	
+	socket.on('joinError', function(msg) {
+		var $joinError = $('#joinError'), error;
+		$joinError.show();
+		switch(msg.error) {
+		case 'nickTaken': error = 'This user name is already taken.'; break;
+		case 'invalidNick': error = 'This is not a valid user name.'; break;
+		default: error = 'Error joining game'; break;
+		}
+		$joinError.text(error);
 	});
 	
 	socket.on('joined', function() {

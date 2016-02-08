@@ -23,7 +23,7 @@ input:focus, button:focus {
 }
 
 /* border radius */
-button, input, .sp-replacer, #people, #canvasframe, #chatcontent, #penTool, #eraserTool {
+button, input, .sp-replacer, #people, #canvasframe, #chatcontent, .rborder {
 	border-radius: 3px;
 }
 
@@ -124,6 +124,17 @@ html, body, #centeringContainer {
 
 #lineWidth {
 	height: 12px;
+}
+
+/* ---------------------- */
+/* join */
+/* ---------------------- */
+
+#joinError {
+	margin-top:15px;
+	background: #b07471;
+	color: white;
+	padding:5px;
 }
 
 /* ---------------------- */
