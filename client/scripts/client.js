@@ -386,7 +386,7 @@ $(document).ready(function() {
 	$eraserTool.attr('width', $eraserTool.innerWidth()); $eraserTool.attr('height', $eraserTool.innerHeight());
 	eraserToolCanvas.draw({from: null, to: {x: $eraserTool.width()/2, y: $eraserTool.height()/2}, color: '#fff', width: eraserLineWidth});
 	$eraserTool.click(function() {
-		selectEraser(true);
+		selectEraser(!$eraserTool.hasClass('selected'));
 	});
 	
 	$penTool.attr('width', $penTool.innerWidth()); $penTool.attr('height', $penTool.innerHeight());
