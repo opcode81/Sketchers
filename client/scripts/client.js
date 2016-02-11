@@ -92,7 +92,7 @@ $(document).ready(function() {
 		$('#joinError').hide();
 		$("#game").hide();
 		$userNameInput.focus();
-	}
+	};
 	
 	// connect to server
 	socket.on('connect', function () {
@@ -250,7 +250,6 @@ $(document).ready(function() {
 	// ================================================
 	
 	var Canvas = function($canvas, opt_bindEvents) {
-		var self = this;
 		this.$canvas = $canvas;
 		this.context = $canvas[0].getContext('2d');
 			
@@ -413,7 +412,7 @@ $(document).ready(function() {
 		myword = '',
 		timeleft = null,
 		drawingTimer = null,
-		gameState;
+		gameState = null;
 	
 	function setHint(hint) {
 		$hint.html(hint.split('').join('&nbsp;'));

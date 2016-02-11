@@ -134,7 +134,7 @@ Game.prototype.emitAll = function(messageId, data) {
 	for(var i = 0; i < this.users.length; ++i) {
 		this.emit(this.users[i], messageId, data);
 	}
-}
+};
 
 Game.prototype.handlerProxy = function(socket, messageId, data) {
 	var user = this.usersById[socket.id];
@@ -301,13 +301,12 @@ Game.prototype.setState = function(state, opt_data) {
 };
 
 Game.prototype.handleJoin = function(socket, msg) {
-	var nick, color, score = 0, scoreCurrentRound = undefined, guessedCorrectly = false;
+	var nick = null, color, score = 0, scoreCurrentRound = undefined, guessedCorrectly = false;
 
 	if (msg.nick) {
 		nick = escape(msg.nick.trim());
 	}
-	if (msg.color)
-		color = msg.color;
+	color = msg.color;
 
 	if (!nick) {
 		socket.emit('joinError', {error:'invalidNick'});
@@ -429,7 +428,7 @@ ConnectionManager.prototype.handleDisconnect = function(socket) {
 	console.log('socket disconnected: ' + socket.id);
 	delete this.socketsById[socket.id];
 	this.handleGameMessage(socket, 'disconnect');
-}
+};
 
 Game.prototype.disconnectUser = function(user) {
 	console.log('disconnecting user ' + user.nick);
