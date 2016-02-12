@@ -291,6 +291,7 @@ Game.prototype.stateDuration = function() {
 };
 
 Game.prototype.setState = function(state, opt_data) {
+	console.log('state=' + state);
 	var data = opt_data || {};
 	data['state'] = state;
 	data['timePassed'] = 0;
@@ -522,7 +523,7 @@ Game.prototype.endRound = function(opt_pass, opt_allGuessed) {
 
 	// allow next user to draw
 	if (autoSelectNextPlayer) {
-		this.setState('intermission', {time: timeBetweenRounds, nextPlayer: nextUser, hint: this.currentHint}); 
+		this.setState('intermission', {time: timeBetweenRounds, nextPlayer: nextUser, hint: this.currentWord}); 
 		console.log('endRound: waiting ' + timeBetweenRounds + ' seconds to start next round');
 		setTimeout(function() {
 				nextUser = findNextUser();
