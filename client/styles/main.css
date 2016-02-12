@@ -23,7 +23,7 @@ input:focus, button:focus {
 }
 
 /* border radius */
-button, input, .sp-replacer, #people, #canvasframe, #chatcontent, .rborder {
+button, input, .sp-replacer, #users, #canvasframe, #chatcontent, .rborder {
 	border-radius: 3px;
 }
 
@@ -148,7 +148,7 @@ html, body, #centeringContainer {
 	vertical-align:top;
 }
 
-#people
+#users
 {
 	background:#fff;
 	border:1px solid #ccc;
@@ -161,7 +161,7 @@ html, body, #centeringContainer {
 	padding-bottom:5px;
 }
 
-#people p
+#users p
 {
 	padding:0px;
 	margin-top:0px;

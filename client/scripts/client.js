@@ -53,14 +53,14 @@ $(document).ready(function() {
 	    socket.close();
 	});
 	
-	var status = $('#status'),
-		people = $('#people'),
-		chatinput = $('#chatinput'),
-		chatnick = $('#chatnick'),
+	var $status = $('#status'),
+		$users = $('#users'),
+		$chatInput = $('#chatinput'),
 		$userNameInput = $('#joinNick'),
 		$joinButton = $('#joinButton'),
 		$changeColourButton = $('#changeColourButton'),
-		$leaveGameButton = $('#leaveGameButton');
+		$leaveGameButton = $('#leaveGameButton'),
+		myNick = null;
 	
 	var sndEndRound = new Audio('sounds/endRound.ogg'),
 		sndStartYourTurn = new Audio("sounds/startYourTurn.ogg"),
@@ -106,7 +106,6 @@ $(document).ready(function() {
 	};
 	$changeColourButton.click(setRandomUserColour);
 	setRandomUserColour();
-	var myNick;
 	
 	var joinGame = function() {
 		myNick = $('#joinNick').val();
@@ -133,9 +132,9 @@ $(document).ready(function() {
 	socket.on('joined', function() {
 		$('#join').hide();
 		$('#game').show();
-		chatinput.removeProp('disabled');
-		chatnick.removeProp('disabled');
-		chatinput.focus();
+		$chatInput.removeProp('disabled');
+		clearChat();
+		$chatInput.focus();
 		$('#game').removeClass('drawing');
 		$('#game').removeClass('guessedIt');
 	});
@@ -148,9 +147,9 @@ $(document).ready(function() {
 	});
 	
 	socket.on('users', function (users) {
-		people.text('');
+		$users.text('');
 		$table = $('<table class="users"></table>');
-		people.append($table);
+		$users.append($table);
 		for(var i in users)
 		{
 			var row = '<tr><td class="score">' + users[i].score + '</td><td>';
@@ -166,55 +165,34 @@ $(document).ready(function() {
 			row += '</tr>';
 			$table.append(row);
 		}
-		people.append($table);
+		$users.append($table);
 	});
 	
 	// ================================================
 	//                                 chat section
 	// ================================================
 	
-	var chatcontent = $('#chatcontent'),
-		changenickcolor = $('#changenickcolor'),
-		myNick = 'guest';
+	var chatcontent = $('#chatcontent');
 	
-	chatinput.keydown(function(e) {
+	$chatInput.keydown(function(e) {
 		if (e.keyCode === 13) {
 			sendMessage();
 		}
 	});
 	
 	function sendMessage()	{
-		var msg = chatinput.val();
+		var msg = $chatInput.val();
 		if (!msg) {
 			return;
 		}
 		if(msg == 'cls' | msg == 'clear') {
 			chatcontent.text('');
-			chatinput.val('');
+			$chatInput.val('');
 			return;
-		}
-		if(myNick != chatnick.val()) {
-			nickChange();
 		}
 		
 		socket.emit('message', { text: msg });
-		chatinput.val('');
-	}
-	
-	chatnick.keydown(function(e)	{
-		if (e.keyCode === 13) {
-			nickChange();
-		}
-	});
-	
-	function nickChange() {
-		var msg = chatnick.val();
-		if (!msg || msg == myNick) {
-			return;
-		}
-		
-		socket.emit('nickChange', { nick: msg });
-		myNick = msg;
+		$chatInput.val('');
 	}
 	
 	socket.on('message', function(msg) {
@@ -240,10 +218,6 @@ $(document).ready(function() {
 	function chatScrollDown() {
 		chatcontent.scrollTop(chatcontent[0].scrollHeight);
 	};
-	
-	changenickcolor.click(function() {
-		socket.emit('changeNickColor');
-	});
 	
 	// ================================================
 	//                           canvas drawing section
@@ -288,7 +262,7 @@ $(document).ready(function() {
 		$eraserTool = $('#eraserTool'),
 		eraserToolCanvas = new Canvas($eraserTool),
 		eraserLineWidth = 20,
-		clearchat = $('#clearchat'),
+		$clearChat = $('#clearchat'),
 		selectedcolor = $('#colour'),
 		$lineWidth = $('#lineWidth'),
 		lastpoint = null,
@@ -367,10 +341,14 @@ $(document).ready(function() {
 		canvas.clear();
 	});
 	
-	clearchat.click(function() {
+	function clearChat() {
 		chatcontent.text('');
-		chatinput.val('');
-		chatinput.focus();
+		$chatInput.val('');
+	}
+	
+	$clearChat.click(function() {
+		clearChat();
+		$chatInput.focus();
 	});
 
 	function selectEraser(selected) {
@@ -426,7 +404,7 @@ $(document).ready(function() {
 		console.log("youDraw");
 		myturn = true;
 		myword = word;
-		status.html('Your word is<br><b style="font-size:130%">' + myword[0] + '</b><br>(difficulty: ' + myword[1] + ')');
+		$status.html('Your word is<br><b style="font-size:130%">' + myword[0] + '</b><br>(difficulty: ' + myword[1] + ')');
 		selectedcolor.spectrum('set', '#000');
 		$lineWidth.val(2);
 		updatePenToolDisplay();
@@ -461,20 +439,20 @@ $(document).ready(function() {
 			else
 				$('#game').addClass('guessedIt');
 			setHint(msg.hint);
-			status.html(msg.nick + ' is drawing!');
+			$status.html(msg.nick + ' is drawing!');
 			startTimer(msg.time - msg.timePassed);
 			chatcontent.append('<p>&raquo; <span style="color:' + msg.color + '">' + msg.nick + '</span> is drawing!</p>');
 			chatScrollDown();
 		}
 		else if (msg.state == 'intermission') {
 			setHint(msg.hint);
-			status.html(msg.nextPlayer.nick + ' is up next!');
+			$status.html(msg.nextPlayer.nick + ' is up next!');
 			startTimer(msg.time - msg.timePassed);
 		}
 		else if (msg.state == 'lobby') {
 			$('#game').removeClass('guessedIt');
 			setHint('LOBBY');
-			status.text('Click "Ready to draw!" to start this round.');
+			$status.text('Click "Ready to draw!" to start this round.');
 			chatcontent.append('<p>When all players are ready, click <strong>Ready to draw!</strong> to start drawing.</p>');
 			chatScrollDown();
 		}
