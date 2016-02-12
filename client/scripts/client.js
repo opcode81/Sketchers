@@ -378,7 +378,7 @@ $(document).ready(function() {
 		penToolCanvas.draw(line);
 	};
 	selectedcolor.change(updatePenToolDisplay);
-	$lineWidth.change(updatePenToolDisplay);
+	$lineWidth.on('change input', updatePenToolDisplay);
 	
 	// ================================================
 	//                           game logic section
