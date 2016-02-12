@@ -420,6 +420,7 @@ $(document).ready(function() {
 		drawingTimer = setInterval( timerTick, 1000 );		
 		++timeleft;
 		timerTick();
+		$timer.show();
 	}
 	
 	function stopTimer() {
@@ -427,6 +428,7 @@ $(document).ready(function() {
 			clearInterval(drawingTimer);
 			drawingTimer = null;
 		}
+		$timer.hide();
 	}
 	
 	socket.on('state', function(msg) {
@@ -451,6 +453,7 @@ $(document).ready(function() {
 		}
 		else if (msg.state == 'lobby') {
 			$('#game').removeClass('guessedIt');
+			stopTimer();
 			setHint('LOBBY');
 			$status.text('Click "Ready to draw!" to start this round.');
 			chatcontent.append('<p>When all players are ready, click <strong>Ready to draw!</strong> to start drawing.</p>');
