@@ -436,14 +436,19 @@ Game.prototype.disconnectUser = function(user) {
 	this.disconnectedUsers[user.nick] = {userData: user, lastRoundNo: this.roundNo};
 	delete this.usersById[user.id];		
 	this.users.splice(this.users.indexOf(user), 1);
-	this.emitAll('userLeft', { nick: user.nick, color: user.color });
-	this.emitUsers();
-	if(this.currentUser && this.currentUser.id == user.id) {
-		console.log('disconnect: current player disconnected; ending turn');
-		this.endRound();
+	if (this.users.length == 0) {
+		this.setState('lobby');
 	}
 	else {
-		this.checkForEndOfRound();
+		this.emitAll('userLeft', { nick: user.nick, color: user.color });
+		this.emitUsers();
+		if(this.currentUser && this.currentUser.id == user.id) {
+			console.log('disconnect: current player disconnected; ending turn');
+			this.endRound();
+		}
+		else {
+			this.checkForEndOfRound();
+		}
 	}
 };
 	
@@ -526,6 +531,8 @@ Game.prototype.endRound = function(opt_pass, opt_allGuessed) {
 		this.setState('intermission', {time: timeBetweenRounds, nextPlayer: nextUser, hint: this.currentWord}); 
 		console.log('endRound: waiting ' + timeBetweenRounds + ' seconds to start next round');
 		setTimeout(function() {
+				if (self.state != 'intermission')
+					return;
 				nextUser = findNextUser();
 				if (!nextUser) {
 					console.log('endRound: no user after intermission');
