@@ -123,7 +123,6 @@ Blondie,3,0
 Blood,2,0
 Schlag,2,0
 Boot,1,1
-Bob Dylan,3,0
 Bombe,1,1
 Knochen,1,1
 Freudenfeuer,3,1
@@ -603,7 +602,6 @@ Hase,2,0
 Harfe,1,1
 Hut,1,1
 Hawaii,2,1
-Hawkeye,3,1
 Kopfzeile,1,0
 Kopfschmerzen,3,0
 Stirnband,2,0
@@ -640,7 +638,6 @@ Schlauch,1,0
 Krankenhaus,2,1
 Hotdog,2,1
 Hotel,2,0
-Hotsauce,3,1
 Whirlpool,2,0
 Haus,2,1
 Umarmung,1,0
@@ -683,7 +680,9 @@ Jayz,3,0
 Jazz,3,0
 Jeans,2,0
 Jeep,2,1
-Jello,2,1
+Götterspeise,2,1
+Gott,2,0
+Gottesanbeterin,3,0
 Gelee,2,0
 Jenga,3,1
 Trikot,2,1
@@ -1151,7 +1150,9 @@ Rubin,2,1
 Teppich,1,1
 Rugrats,3,1
 Herrscher,1,1
-Runway,2,0
+Laufsteg,2,0
+Landebahn,2,0
+Startbahn,2,0
 Russland,3,1
 Sack,2,0
 Sattel,2,1
@@ -1380,11 +1381,11 @@ Sirup,2,0
 Tisch,2,1
 Taco,1,1
 Kaulquappe,1,1
-Schlagwort,1,0
+Schlagwort,3,0
 Schwanz,1,1
 Taiwan,3,1
 Start,3,0
-Tango,2,0
+Tango,3,0
 Panzer,1,1
 Klebeband,2,0
 Ziel,2,0
@@ -1439,7 +1440,6 @@ Toga,3,0
 Toilette,1,1
 Tomate,2,1
 Grab,2,0
-Tom Hanks,3,0
 Zunge,1,1
 Werkzeug,1,0
 Werkzeugkasten,2,1
