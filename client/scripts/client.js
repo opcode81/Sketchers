@@ -48,11 +48,6 @@ function randomUserColour() {
 $(document).ready(function() {
 	var socket = io.connect('/');
 	
-	$(window).on('beforeunload', function(){
-		console.log('beforeunload: closing socket');
-	    socket.close();
-	});
-	
 	var $status = $('#status'),
 		$users = $('#users'),
 		$chatInput = $('#chatinput'),
