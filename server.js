@@ -167,13 +167,13 @@ function getRandomInt(min, max) {
 	return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-// load dictionary.txt into memory
+// load dictionary
 fs.readFile(__dirname + '/dictionaries/de.txt', function (err, data) {
 	dictionary = data.toString('utf-8').split('\r\n');
 	dictionary = dictionary.map(function(x) {
 		return x.split(",");
 	});
-	dictionary = dictionary.filter(function(x) { return x.length == 3; });
+	dictionary = dictionary.filter(function(x) { return x.length == 2; });
 	console.log(dictionary.length + " words in dictionary");
 	shuffle(dictionary);
 });
