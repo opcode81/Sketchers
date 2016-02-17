@@ -96,7 +96,6 @@ Strand,2
 Schnabel,1
 Bohnen,2
 Bär,1
-Bart,2
 Beatles,3
 Bett,1
 Biene,1
@@ -105,19 +104,17 @@ Bienenstock,2
 Bier,1
 Glocke,1
 Gürtel,1
-Bank,2
 Lätzchen,1
 Fahrrad,1
 Bieber,3
 Bigfoot,2
-Fahrrad,1
+Motorrad,1
 Bikini,2
 Rechnung,1
 Bingo,3
 Vogel,1
 Vogelkäfig,1
 Geburtstag,3
-Decke,2
 Mixer,1
 Blondie,3
 Blood,2
@@ -206,15 +203,12 @@ Umhang,2
 Kapitän,3
 Auto,1
 Karte,1
-Karten,2
 Fasching,3
 Teppich,3
 Fahrgemeinschaft,3
 Karotte,1
-Auto,3
 Autowäsche,3
 Casino,2
-Schloss,2
 Katze,1
 Katapult,2
 Wels,2
@@ -320,8 +314,6 @@ Zyklop,2
 Tanz,2
 Schuppen,3
 Gefahr,2
-Pfeil,1
-Tod,1
 Taubheit,1
 Tod,2
 Deck,2
@@ -346,7 +338,6 @@ Direktor,3
 Schmutz,1
 Diskothek,2
 Krankheit,3
-Gericht,2
 Diva,2
 Taucher,1
 Scheidung,3
@@ -373,7 +364,6 @@ Punkt,3
 Taube,2
 Dracula,3
 Drachen,1
-Vorhang,3
 Unentschieden,2
 Schublade,2
 Traum,2
@@ -486,7 +476,7 @@ Wohnung,2
 Floh,2
 Flug,2
 Flut,2
-Stock,2
+Etage,2
 Florida,3
 Zahnseide,3
 Mehl,2
@@ -539,7 +529,7 @@ Geist,1
 Geschenk,2
 Giraffe,2
 Mädchen,1
-Glas,2
+Glas,1
 Schadenfreude,2
 Globus,1
 Handschuh,2
@@ -598,7 +588,7 @@ Griff,2
 Kleiderbügel,2
 Henker,3
 Hafen,2
-Hase,2
+Kaninchen,2
 Harfe,1
 Hut,1
 Hawaii,2
@@ -621,7 +611,7 @@ Landstreicher,3
 Hockey,2
 Urlaub,3
 Holland,3
-Start,1
+Start,2
 Obdachloser,3
 Homer,2
 Homerun,2
@@ -666,13 +656,11 @@ Irland,3
 Bügeleisen,1
 Iron Man,3
 Insel,2
-Jacke,2
 Jaguar,2
 Gefängnis,1
 Marmelade,1
 Jamaika,3
 Japan,3
-Krug,1
 Speerwurf,3
 Kiefer,1
 Rachen,2
@@ -718,7 +706,6 @@ Mörder,3
 Kilt,2
 König,2
 Kirby,3
-Kuchen,3
 Kätzchen,2
 Unterschied,1
 Kniescheibe,2
@@ -726,16 +713,12 @@ Knieschutz,2
 Knie,2
 Messer,1
 Stricken,3
-Messer,2
 Knoten,2
-Knöchel,2
 Koala,2
 Koopa,3
 Korea,3
-Krake,3
 Labor,2
 Leiter,1
-Dame,3
 Marienkäfer,2
 Lady Gaga,3
 See,2
@@ -747,8 +730,7 @@ Laptop,2
 Laser,2
 Lasso,1
 Latrine,2
-Lachen,2
-Lachen,3
+Gelächter,2
 Lava,1
 Lavalampe,2
 Rechtsanwalt,3
@@ -761,12 +743,10 @@ Links,2
 Bein,1
 Zitrone,1
 Limonade,2
-Glas,1
 Leopard,3
 Anschreiben,2
 Bibliothek,2
 Deckel,2
-Aufzug,2
 Feuerzeug,2
 Schwebe,2
 Limette,1
@@ -782,7 +762,6 @@ Flüssigkeit,2
 Lisa,2
 Liste,2
 Eidechse,2
-Hummer,2
 Schloss,1
 Medaillon,2
 Logarithmus,2
@@ -795,7 +774,6 @@ Liebe,2
 Turteltaube,3
 Gepäck,2
 Luigi,2
-Bauholz,2
 Mittag,2
 Lunge,2
 Songtext,2
@@ -814,7 +792,6 @@ Mammut,2
 Mango,2
 Maniküre,3
 Villa,3
-Karte,1
 Marmor,2
 Marge,2
 Marine,3
@@ -848,7 +825,6 @@ Messgerät,2
 Metroid,3
 Mexiko,2
 Miami,3
-Mitte,2
 Milch,2
 Milchmann,3
 Kleinbus,2
@@ -859,7 +835,6 @@ Flugkörper,2
 Fäustlinge,2
 Modell,2
 Geld,2
-Affe,1
 Monopol,3
 Monster,2
 Mond,1
@@ -867,7 +842,6 @@ Elch,2
 Morgen,3
 Mücke,2
 Moskito,2
-Motor,2
 Berg,1
 Maus,1
 Mund,1
@@ -880,7 +854,6 @@ Muse,2
 Museum,2
 Pilz,1
 Musik,2
-Jukebox,2
 Schnurrbart,1
 Senf,2
 Nacho,2
@@ -889,7 +862,6 @@ Nagelfeile,2
 Name,3
 Serviette,2
 Nascar,3
-Marine,2
 Hals,1
 Halskette,1
 Nadel,1
@@ -921,12 +893,11 @@ Krankenschwester,2
 Mutter,1
 Eiche,3
 Ruder,2
-Ruder,2
 Haferbrei,3
 Obama,2
 Ozean,2
 Achteck,1
-Krake,1
+Krake,2
 Geruch,2
 Ausgang,2
 Notausgang,2
@@ -965,7 +936,6 @@ Schlafanzug,3
 Palast,2
 Handfläche,1
 Palme,2
-Pfannkuchen,2
 Pfannkuchen,2
 Panda,2
 Hose,2
@@ -1015,8 +985,6 @@ Bild,3
 Kuchendiagramm,1
 Kreisdiagramm,2
 Schwein,1
-Taube,2
-Pikachu,1
 Pille,1
 Kissen,1
 Pilot,2
@@ -1028,12 +996,9 @@ Pinky,1
 Windrad,1
 Rohr,1
 Pirat,2
-Pistole,2
 Pitbull,3
-Krug,2
 Fallstrick,3
 Pizza,2
-Flugzeug,2
 Planet,2
 Pflanze,2
 Teller,2
@@ -1064,7 +1029,7 @@ Postkarte,2
 Poster,2
 Kanne,1
 Kartoffel,2
-Beutel,2
+Plastiktüte,2
 Heckenrose,2
 Gebet,2
 Schwangerschaft,3
@@ -1074,7 +1039,7 @@ Prinz,2
 Prinzessin,2
 Drucken,3
 Prisma,2
-Gefängnis,2
+Irrenhaus,3
 Prius,3
 Pfützen,3
 Kürbis,2
@@ -1083,14 +1048,12 @@ Hündchen,2
 Geldbeutel,1
 Stoß,2
 Pushup,3
-Puzzle,2
 Pyramide,2
 Quacksalber,3
 Viertel,2
 Königin,2
 Ruhe,3
 Quilt,2
-Kaninchen,2
 Waschbär,2
 Rennen,2
 Rennwagen,3
@@ -1119,11 +1082,8 @@ Ren,1
 Reptil,3
 Pause,2
 Nashorn,1
-Band,1
 Rippen,2
 Reis,2
-Fahrt,1
-Gewehr,2
 Rand,2
 Ring,1
 Klingelton,3
@@ -1143,18 +1103,14 @@ Hahn,2
 Wurzel,2
 Seil,1
 Rose,1
-Runde,2
-Zeile,2
 Ruderboot,2
 Rubin,2
-Teppich,1
 Rugrats,3
 Herrscher,1
 Laufsteg,2
 Landebahn,2
 Startbahn,2
 Russland,3
-Sack,2
 Sattel,2
 Safari,3
 Segel,2
@@ -1202,7 +1158,6 @@ Shampoo,2
 Form,2
 Hai,1
 Kreuz,2
-Rasierer,3
 Schaf,1
 Betriebsmittel,2
 Brett,2
@@ -1235,26 +1190,21 @@ Sixpack,2
 Skate,2
 Schlittschuhläufer,2
 Skelett,2
-Ski,1
 Haut,2
 Rock,1
 Ski,1
 Schädel,2
 Stinktier,2
-Himmel,1
 Skyline,3
 Slamdunk,2
-Schlag,1
 Schlitten,1
 Rodeln,2
 Schlaf,2
-Schlitten,2
 Folie,2
 Schleim,2
 Rutsch,1
 Hausschuhe,2
 Steigung,2
-Geruch,2
 Lächeln,1
 Rauch,2
 Raucher,2
@@ -1272,12 +1222,10 @@ Schneefall,3
 Schneeball,3
 Schneemann,1
 Seife,1
-Fußball,2
 Socke,1
 Dose,2
 Socken,2
 Soda,1
-Sofa,1
 Boden,2
 Soldat,2
 Sombrero,1
@@ -1335,12 +1283,10 @@ Stein,2
 Hocker,1
 Stop,2
 Storch,1
-Sturm,2
 Ofen,2
 Stroh,1
 Strohmann,3
 Strom,3
-Straße,2
 String,2
 Schnur,2
 Streifen,2
@@ -1384,11 +1330,9 @@ Kaulquappe,1
 Schlagwort,3
 Schwanz,1
 Taiwan,3
-Start,3
 Tango,3
 Panzer,1
 Klebeband,2
-Ziel,2
 Tätowierung,2
 Taxi,1
 Tee,2
@@ -1403,7 +1347,6 @@ Techno,3
 Teenager,3
 Tipi,1
 Gebiss,2
-Sturm,3
 Tennis,2
 Zelt,1
 Tentakel,2
@@ -1428,7 +1371,6 @@ Zeitbombe,2
 Zeitleiste,3
 Auszeit,2
 Zeitzone,3
-Reifen,1
 Taschentuch,2
 Titan,3
 Kröte,1
@@ -1439,7 +1381,6 @@ Zehennagel,2
 Toga,3
 Toilette,1
 Tomate,2
-Grab,2
 Zunge,1
 Werkzeug,1
 Werkzeugkasten,2
@@ -1477,14 +1418,12 @@ T-Shirt,2
 Tuba,1
 Dienstag,1
 Schlepper,3
-Bauch,2
 Thunfisch,1
 Melodie,3
 Tunnel,2
 Tupac,3
 Turbo,3
 Türkei,2
-Schildkröte,1
 Stoßzahn,1
 Smoking,2
 Fernseher,1
@@ -1510,7 +1449,6 @@ Seeigel,1
 USA,2
 USB,3
 Platzanweiser,3
-Urlaub,3
 Impfstoff,3
 Vakuum,2
 Darth Vader,3
@@ -1521,7 +1459,6 @@ Tresor,3
 Schleier,2
 Vene,3
 Klettband,3
-Gift,3
 Abzug,3
 Venus,2
 Weste,1
@@ -1559,14 +1496,12 @@ Walross,3
 Zauberstab,1
 Krieg,2
 Warcraft,3
-Kleiderschrank,3
 Andy Warhol,2
 Krieger,3
 Warze,3
 Wäsche,2
 Wespe,3
 Abfall,2
-Uhr,2
 Wasser,1
 Wasserbett,3
 Wasserpistole,3
@@ -1576,7 +1511,6 @@ Winken,2
 Wachs,1
 Hochzeitsfeier,3
 Keil,2
-Gras,1
 Woche,2
 Gewichte,3
 Werwolf,3
@@ -1618,7 +1552,6 @@ Assistent,2
 Wolf,1
 Frau,2
 Wonder,3
-Holz,1
 Wolle,1
 Arbeit,3
 Seminar,2
@@ -1637,7 +1570,6 @@ Schreiben,3
 Kopierer,3
 Röntgen,2
 Yacht,2
-Poker,3
 Flohmarkt,3
 Garn,1
 Gähnen,2
@@ -1680,20 +1612,17 @@ Glühbirne,2
 Kugelfisch,2
 Hälfte,2
 Jojo,2
-Bienenstock,2
 Adresse,2
 Delfin,2
 Stadt,2
 Magen,2
 Surfbrett,2
 Speicher,2
-Rauch,2
 Rechen,2
 Gießkanne,2
 Stachelschwein,2
 Duschvorhang,3
 Ehemann,3
-Klippe,3
 Hochzeitstorte,3
 Baguette,3
 Ladegerät,3
@@ -1757,7 +1686,6 @@ Schuhband,2
 Schnürsenkel,2
 Feuerlöscher,2
 Gymnasium,3
-Hafen,2
 Holz,2
 Infusion,2
 Jachthafen,3
@@ -1791,3 +1719,4 @@ Keilriemen,3
 Komiker,3
 Koma,3
 Dachs,2
+Lackschaden,3
