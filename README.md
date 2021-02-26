@@ -4,6 +4,10 @@ An online multiplayer browser game where players guess words/terms based sketche
 
 ## Usage ##
 
+0. Initial setup:
+
+        npm install
+
 1. Run:
 
 		node server.js
