@@ -265,8 +265,8 @@ $(document).ready(function() {
 		mouseoutWhilePainting = false,
 		myturn = false;
 
-	var drawWithEvent = function(e) {
-		var newpoint = { x: e.offsetX, y: e.offsetY}, color, lineWidth;
+	var draw = function(xy) {
+		var newpoint = { x: xy[0], y: xy[1]}, color, lineWidth;
 		if ($eraserTool.hasClass('selected')) {
 			color = '#fff';
 			lineWidth = eraserLineWidth;
@@ -281,19 +281,33 @@ $(document).ready(function() {
 		socket.emit('draw', line);
 	};
 	
-	$canvas.mousedown(function(e) {
+	var startStroke = function(xy) {
 		if(myturn) {
+			console.log("startstroke");
 			painting = true;
 			mouseoutWhilePainting = false;
 			lastpoint = null;
-			drawWithEvent(e);
+			draw(xy);
 		}
+	};
+	
+	var continueStroke = function(xy) {
+		if(myturn && painting) {
+			console.log("continuestroke");
+			draw(xy);
+		}	
+	};
+	
+	var endStroke = function() {
+		painting = false;
+	}
+
+	$canvas.mousedown(function(e) {
+		startStroke([e.offsetX, e.offsetY]);
 	});
 	
 	$canvas.mousemove(function(e) {
-		if(myturn && painting) {
-			drawWithEvent(e);
-		}
+		continueStroke([e.offsetX, e.offsetY]);
 	});
 	
 	$canvas.mouseout(function(e) {
@@ -303,18 +317,37 @@ $(document).ready(function() {
 		}
 	});
 	
-	$canvas.mouseup(function(e) {
-		painting = false;
-	});
+	$canvas.mouseup(endStroke);
 	
 	$canvas.mouseover(function(e) {
 		if (mouseoutWhilePainting && e.buttons == 1) { // returning to canvas with button still pressed
 			painting = true;
 			mouseoutWhilePainting = false;
 			lastpoint = null;
-			drawWithEvent(e);
+			draw([e.offsetX, e.offsetY]);
 		}
 	});
+	
+	const getTouchPoint = evt => {
+	    if (!evt.currentTarget) {
+	        return [0, 0];
+	    }
+	    const rect = evt.currentTarget.getBoundingClientRect();
+	    const touch = evt.targetTouches[0];
+	    return [touch.clientX - rect.left, touch.clientY - rect.top];
+	};
+	
+	$canvas.bind('touchstart', function(e) {
+		startStroke(getTouchPoint(e.originalEvent));
+	});
+	
+	$canvas.bind('touchmove', function(e) {
+		continueStroke(getTouchPoint(e.originalEvent));
+	});
+	
+	$canvas.bind('touchend', endStroke);
+	
+	$canvas.bind('touchcancel', endStroke);
 	
 	socket.on('draw', $.proxy(canvas.draw, canvas));
 	
