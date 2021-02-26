@@ -4,7 +4,7 @@
 	"description": "An online multiplayer browser game where players guess words/terms based sketches drawn on a virtual whiteboard (similar to Pictionary, Activity and Montagsmaler) with over 1800 words in English and German.",
 	"keywords": ["drawing", "multiplayer", "game", "pictionary", "Montagsmaler"],
 	"dependencies": {
-		"socket.io": "0.9.5",
+		"socket.io": "~1.4.0",
 		"escape-html": "1.0.3"
 	},
 	"engine": "node >= 0.4.7",
