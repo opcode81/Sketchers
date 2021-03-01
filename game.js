@@ -1,73 +1,3 @@
-var app = require('http').createServer(handler),
-	io = require('socket.io').listen(app, { log: false }),
-	fs = require('fs'),
-	escape = require('escape-html'),
-	port = process.env.port || 42420;
-
-app.listen(port);
-console.log('>>> Sketchers started on port ' + port + ' >>>');
-
-// ================================================
-// server routing
-// ================================================
-
-function handler (req, res) {
-	var reqFile = req.url;
-	
-	// default file
-	if (reqFile == '/') {
-		reqFile = '/index.html';
-	}
-	
-	// file exists?
-	try {
-		fs.lstatSync(__dirname + '/client' + reqFile);
-	}
-	catch (e) {
-		reqFile = '/404.html';
-	}
-	
-	// show file
-	fs.readFile(__dirname + '/client' + reqFile,
-		function (err, data) {
-			if (err) {
-				res.writeHead(200);
-				return res.end('Error loading requested file ' + reqFile);
-			}
-			
-			var filetype = reqFile.substr(reqFile.lastIndexOf('.'));
-			switch(filetype) {
-				case '.html':
-					res.setHeader('Content-Type', 'text/html');
-					break;
-				case '.js':
-					res.setHeader('Content-Type', 'application/javascript');
-					break;
-				case '.css':
-					res.setHeader('Content-Type', 'text/css');
-					break;
-				case '.gif':
-					res.setHeader('Content-Type', 'image/gif');
-					break;
-				case '.png':
-					res.setHeader('Content-Type', 'image/png');
-					break;
-			}
-			
-			res.writeHead(200);
-			res.end(data);
-		}
-	);
-}
-
-// ================================================
-// app logic
-// ================================================
-
-var dictionary;
-var connectionManager;
-var game;
-	
 // game mode parametrisation
 var roundTime = 120;
 var correctGuessEndsTurn = false;
@@ -77,33 +7,22 @@ var maxHints = 4;
 var maxHintFraction = 0.40;
 var timeBetweenRounds = 7; // seconds
 
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+var handlerName = function(messageId) {
+	return 'handle' + messageId[0].toUpperCase() + messageId.slice(1);
+};
+
 var proxy = function(fn, ctx) {
 	return function() {
 		fn.apply(ctx, arguments);
 	};
 };
 
-var handlerName = function(messageId) {
-	return 'handle' + messageId[0].toUpperCase() + messageId.slice(1);
-};
-
-var ConnectionManager = function() {
-	this.socketsById = {};
-};
-
-ConnectionManager.prototype.handleGameMessage = function(socket, messageId, data) {
-	game.handlerProxy(socket, messageId, data); 
-};
-
-ConnectionManager.prototype.emit = function(socketId, messageId, data) {
-	var socket = this.socketsById[socketId];
-	if (!socket) 
-		console.trace('unknown socket ' + socketId);
-	else
-		socket.emit(messageId, data);
-};
-
-var Game = function() {
+var Game = function(dictionary) {
+	this.dictionary = dictionary;
 	this.roundNo = 0;
 	this.users = [];
 	this.canvas = [];
@@ -119,6 +38,7 @@ var Game = function() {
 	this.disconnectedUsers = {};
 	this.nextPlayerSeqNo = 0;
 	this.setState('lobby');
+	this.connectionManager = null;
 };
 
 Game.prototype.emit = function(userOrUserId, messageId, data) {
@@ -126,7 +46,7 @@ Game.prototype.emit = function(userOrUserId, messageId, data) {
 	if (!user)
 		console.trace('emit: unknown user ' + userOrUserId);
 	else {
-		connectionManager.emit(user.id, messageId, data);
+		this.connectionManager.emit(user.id, messageId, data);
 	}
 };
 
@@ -144,64 +64,6 @@ Game.prototype.handlerProxy = function(socket, messageId, data) {
 	}
 	var handler = this[handlerName(messageId)];
 	handler.call(this, socket, user, data);
-};
-
-function shuffle(array) {
-	  var currentIndex = array.length, temporaryValue, randomIndex;
-
-	  // While there remain elements to shuffle...
-	  while (0 !== currentIndex) {
-
-	    // Pick a remaining element...
-	    randomIndex = Math.floor(Math.random() * currentIndex);
-	    currentIndex -= 1;
-
-	    // And swap it with the current element.
-	    temporaryValue = array[currentIndex];
-	    array[currentIndex] = array[randomIndex];
-	    array[randomIndex] = temporaryValue;
-	  }
-}
-
-function getRandomInt(min, max) {
-	return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-// load dictionary
-fs.readFile(__dirname + '/dictionaries/de.txt', function (err, data) {
-	dictionary = data.toString('utf-8').split('\r\n');
-	dictionary = dictionary.map(function(x) {
-		return x.split(",");
-	});
-	dictionary = dictionary.filter(function(x) { return x.length == 2; });
-	console.log(dictionary.length + " words in dictionary");
-	shuffle(dictionary);
-});
-
-ConnectionManager.prototype.handleConnection = function(socket) {
-	this.socketsById[socket.id] = socket;
-	
-	var bindCM = function(messageId) {
-		socket.on(messageId, function(data) {
-				var handler = connectionManager[handlerName(messageId)];
-				handler.call(connectionManager, socket, data);
-			});
-	};
-	
-	var bindGame = function(messageId) {
-		socket.on(messageId, function(data) {
-				connectionManager.handleGameMessage(socket, messageId, data);
-			});
-	};
-	
-	// bind functions
-	bindCM('join'); 
-	bindCM('disconnect');
-	bindGame('message');
-	bindGame('draw');
-	bindGame('readyToDraw');
-	bindGame('clearCanvas');
-	bindGame('leave');
 };
 
 Game.prototype.addHint = function() {
@@ -235,7 +97,7 @@ Game.prototype.startRound = function(user) {
 	this.canvas.splice(0, this.canvas.length);
 	this.emitAll('clearCanvas');
 	
-	var word = dictionary[(this.roundNo-1) % dictionary.length];
+	var word = this.dictionary[(this.roundNo-1) % this.dictionary.length];
 	
 	this.currentWord = word[0];
 
@@ -281,11 +143,6 @@ Game.prototype.startRound = function(user) {
 	this.hintIntervalId = setInterval(proxy(this.provideHint, this), hintInterval);
 };
 	
-ConnectionManager.prototype.handleJoin = function(socket, msg) {
-	'use strict';
-	game.handleJoin(socket, msg);
-};
-
 Game.prototype.stateDuration = function() {
 	return Math.floor((new Date().getTime() - this.stateStartTime.getTime()) / 1000);
 };
@@ -425,12 +282,6 @@ Game.prototype.handleMessage = function (socket, user, msg) {
 	}
 };
 	
-ConnectionManager.prototype.handleDisconnect = function(socket) {	
-	console.log('socket disconnected: ' + socket.id);
-	delete this.socketsById[socket.id];
-	this.handleGameMessage(socket, 'disconnect');
-};
-
 Game.prototype.disconnectUser = function(user) {
 	console.log('disconnecting user ' + user.nick);
 	this.disconnectedUsers[user.nick] = {userData: user, lastRoundNo: this.roundNo};
@@ -549,9 +400,4 @@ Game.prototype.endRound = function(opt_pass, opt_allGuessed) {
 	}
 };
 
-game = new Game();
-
-connectionManager = new ConnectionManager();
-io.sockets.on('connection', function (socket) {
-	connectionManager.handleConnection(socket);
-});
+module.exports = {"Game": Game};
