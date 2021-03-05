@@ -91,9 +91,10 @@ html, body, #centeringContainer {
 	transform: translateY(-50%);
 }
 
-#status
+#status, #gameCode
 {
 	padding:5px;
+	margin-top:15px;
 	margin-bottom:15px;
 	color:#fff;
 	font-size:15px;

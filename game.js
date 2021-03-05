@@ -1,3 +1,5 @@
+var escape = require('escape-html');
+
 // game mode parametrisation
 var roundTime = 120;
 var correctGuessEndsTurn = false;
@@ -21,7 +23,7 @@ var proxy = function(fn, ctx) {
 	};
 };
 
-var Game = function(dictionary) {
+var Game = function(dictionary, connectionManager, tag) {
 	this.dictionary = dictionary;
 	this.roundNo = 0;
 	this.users = [];
@@ -38,10 +40,12 @@ var Game = function(dictionary) {
 	this.disconnectedUsers = {};
 	this.nextPlayerSeqNo = 0;
 	this.setState('lobby');
-	this.connectionManager = null;
+	this.connectionManager = connectionManager;
+	this.tag = tag;
 };
 
 Game.prototype.emit = function(userOrUserId, messageId, data) {
+	console.log("emit "+messageId);
 	var user = typeof(userOrUserId) != 'object' ? this.usersById[userOrUserId] : userOrUserId;
 	if (!user)
 		console.trace('emit: unknown user ' + userOrUserId);
@@ -51,6 +55,7 @@ Game.prototype.emit = function(userOrUserId, messageId, data) {
 };
 
 Game.prototype.emitAll = function(messageId, data) {
+	console.log("emitAll "+messageId);
 	for(var i = 0; i < this.users.length; ++i) {
 		this.emit(this.users[i], messageId, data);
 	}
@@ -210,8 +215,10 @@ Game.prototype.handleJoin = function(socket, msg) {
 	}
 	socket.emit('state', this.stateData);
 	
-	this.emitAll('userJoined', { nick: nick, color: color });
-	this.emitUsers();	
+	this.emitAll('userJoined', { nick: nick, color: color, tag: this.tag });
+	this.emitUsers();
+	console.log("HandleJoin Completed");
+	return user;
 };
 	
 Game.prototype.checkForEndOfRound = function() {

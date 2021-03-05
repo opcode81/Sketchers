@@ -15,18 +15,28 @@
 		<div id="main" >
 			<img src="title.png" style="margin-bottom:20px;">
 			<div id="initial" style="color:white; font-size:15px;">Connecting...</div>
-			<div id="join" style="display:none; color:white; font-size:15px;">
-				User name: &nbsp;<input id="joinNick" type="text" maxlength="30">&nbsp;
-				<button id="changeColourButton">Change colour</button>
-				<button id="joinButton" value="Join"> Join Game </button>
+			<div id="join" style="display:none; color:white; font-size:15px; text-align: center;">
+				<div style="margin-bottom: 25px;">
+					<input id="joinNick" type="text" maxlength="30" placeholder="User name">
+					<button id="changeColourButton">Change colour</button>
+				</div>
+				<div>
+					<button id="createButton"> Create Game </button>
+				</div>
+				<div style="margin: 6px;">OR</div>
+				<div>
+					<input id="tag" type="text" maxlength="10" placeholder="Game code">
+					<button id="joinButton"> Join Game </button>
+				</div>	
 				<div id="joinError" class="rborder"></div>
-			</div>
+			</div>	
 			<div id="game" style="display:none;">	
 				<div id="panels">
 					<div id="firstpanel">
 						<div id="users"></div>
 						<input type="button" id="readytodraw" value="Awaiting state" />
 						<div id="timer"></div>
+						<div id="gameCode">n/a</div>
 						<div id="status">Status: disconnected</div>
 					</div>
 					<div id="secondpanel">

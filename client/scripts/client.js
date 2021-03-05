@@ -53,6 +53,7 @@ $(document).ready(function() {
 		$chatInput = $('#chatinput'),
 		$userNameInput = $('#joinNick'),
 		$joinButton = $('#joinButton'),
+		$createButton = $('#createButton'),
 		$changeColourButton = $('#changeColourButton'),
 		$leaveGameButton = $('#leaveGameButton'),
 		myNick = null;
@@ -102,16 +103,19 @@ $(document).ready(function() {
 	$changeColourButton.click(setRandomUserColour);
 	setRandomUserColour();
 	
+	var createGame = function() {
+		myNick = $('#joinNick').val();
+		socket.emit('createGame', { nick: myNick, color: $userNameInput.css('color')});
+	};
+	$createButton.click(createGame);
+
 	var joinGame = function() {
 		myNick = $('#joinNick').val();
-		socket.emit('join', { nick: myNick, color: $userNameInput.css('color')});
+		myGameCode = $('#tag').val();
+		socket.emit('join', { nick: myNick, color: $userNameInput.css('color'), tag: myGameCode});
 	};
 	$joinButton.click(joinGame);
-	$userNameInput.keydown(function(e) {
-		if (e.keyCode === 13) {
-			joinGame();
-		}
-	});
+
 	
 	socket.on('joinError', function(msg) {
 		var $joinError = $('#joinError'), error;
@@ -119,6 +123,7 @@ $(document).ready(function() {
 		switch(msg.error) {
 		case 'nickTaken': error = 'This user name is already taken.'; break;
 		case 'invalidNick': error = 'This is not a valid user name.'; break;
+		case 'invalidTag': error = 'This is not a valid game code.'; break;
 		default: error = 'Error joining game'; break;
 		}
 		$joinError.text(error);
@@ -196,7 +201,8 @@ $(document).ready(function() {
 	});
 	
 	socket.on('userJoined', function (user) {
-		chatcontent.append('<p>&raquo; <span style="color:' + user.color + '">' + user.nick + '</span> joined.</p>');
+		$('#gameCode').text('Game Code: ' + user.tag);
+		chatcontent.append('<p>&raquo; <span style="color:' + user.color + '">' + user.nick +'</span> joined.</p>');
 		chatScrollDown();
 	});
 	

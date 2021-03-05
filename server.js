@@ -1,9 +1,7 @@
 var app = require('http').createServer(handler),
 	io = require('socket.io').listen(app, { log: false }),
 	fs = require('fs'),
-	escape = require('escape-html'),
 	connmgr = require("./connmgr.js"),
-	gm = require("./game.js"),
 	port = process.env.port || 42420;
 
 app.listen(port);
@@ -85,9 +83,8 @@ function shuffle(array) {
 }
 
 var startGame = function(dictionary) {
-	var game = new gm.Game(dictionary);
-
-	var connectionManager = new connmgr.ConnectionManager(game);
+	console.log("startGame");
+	var connectionManager = new connmgr.ConnectionManager(dictionary);
 	io.sockets.on('connection', function (socket) {
 		connectionManager.handleConnection(socket);
 	});
