@@ -18,6 +18,23 @@ var generateGameCode = function() {
 	return result
 }
 
+function shuffle(array) {
+	var currentIndex = array.length, temporaryValue, randomIndex;
+
+	// While there remain elements to shuffle...
+	while (0 !== currentIndex) {
+
+	  // Pick a remaining element...
+	  randomIndex = Math.floor(Math.random() * currentIndex);
+	  currentIndex -= 1;
+
+	  // And swap it with the current element.
+	  temporaryValue = array[currentIndex];
+	  array[currentIndex] = array[randomIndex];
+	  array[randomIndex] = temporaryValue;
+	}
+}
+
 var ConnectionManager = function(dictionary) {
 	this.dictionary = dictionary;
 	this.gamesByTag = {};
@@ -74,9 +91,10 @@ ConnectionManager.prototype.handleCreateGame = function(socket, data) {
 	while (this.gamesByTag.hasOwnProperty(tag)) {
 		tag = generateGameCode()
 	}
-	this.gamesByTag[tag] = new gm.Game(this.dictionary, this, tag);
+	var shuffledDictionary = this.dictionary.slice();
+	shuffle(shuffledDictionary);
+	this.gamesByTag[tag] = new gm.Game(shuffledDictionary, this, tag);
 	this.joinGame(socket, data, tag);
-
 };
 
 ConnectionManager.prototype.handleJoin = function(socket, data) {
@@ -96,7 +114,6 @@ ConnectionManager.prototype.joinGame = function(socket, data, tag) {
 		socket.emit('joinError', {error:'invalidTag'});
 	}
 };
-
 
 ConnectionManager.prototype.handleDisconnect = function(socket) {	
 	console.log('socket disconnected: ' + socket.id);

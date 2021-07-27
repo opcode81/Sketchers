@@ -65,23 +65,6 @@ function handler (req, res) {
 // ================================================
 
 
-function shuffle(array) {
-	var currentIndex = array.length, temporaryValue, randomIndex;
-
-	// While there remain elements to shuffle...
-	while (0 !== currentIndex) {
-
-	  // Pick a remaining element...
-	  randomIndex = Math.floor(Math.random() * currentIndex);
-	  currentIndex -= 1;
-
-	  // And swap it with the current element.
-	  temporaryValue = array[currentIndex];
-	  array[currentIndex] = array[randomIndex];
-	  array[randomIndex] = temporaryValue;
-	}
-}
-
 var startGame = function(dictionary) {
 	console.log("startGame");
 	var connectionManager = new connmgr.ConnectionManager(dictionary);
@@ -98,8 +81,6 @@ fs.readFile(__dirname + '/dictionaries/de.txt', function (err, data) {
 	});
 	dictionary = dictionary.filter(function(x) { return x.length == 2; });
 	console.log(dictionary.length + " words in dictionary");
-	shuffle(dictionary);
-
 	startGame(dictionary);
 });
 
